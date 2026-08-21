@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>IJN Digital Reader</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7f9;
+      color: #003153;
+    }
+
+    .reader-header {
+      background: #003153;
+      color: white;
+      padding: 18px 24px;
+    }
+
+    .reader-header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .reader-header p {
+      margin: 5px 0 0;
+      opacity: 0.8;
+    }
+
+    .reader-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #book-title {
+      margin-bottom: 10px;
+    }
+
+    #book-subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    #status {
+      margin: 30px 0;
+      font-size: 16px;
+    }
+
+    .pdf-link {
+      display: inline-block;
+      padding: 12px 20px;
+      background: #2D99C9;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+
+    .pdf-link:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="reader-header">
+    <h1>IJN Digital Reader</h1>
+    <p>Institut Jantung Negara</p>
+  </header>
+
+  <main class="reader-container">
+
+    <h2 id="book-title">Loading book...</h2>
+
+    <div id="book-subtitle"></div>
+
+    <div id="status">
+      Please wait while the publication is loaded.
+    </div>
+
+    <a
+      id="pdf-link"
+      class="pdf-link"
+      href="#"
+      target="_blank"
+      style="display:none;"
+    >
+      Open PDF
+    </a>
+
+  </main>
+
+  <script>
+
+    async function loadBook() {
+
+      const params = new URLSearchParams(window.location.search);
+
+      const bookId = params.get("book");
+
+      if (!bookId) {
+
+        document.getElementById("book-title").textContent =
+          "No publication selected";
+
+        document.getElementById("status").textContent =
+          "Please open this page using a valid book link.";
+
+        return;
+      }
+
+      try {
+
+        const response = await fetch("library/books.json");
+
+        const books = await response.json();
+
+        const book = books[bookId];
+
+        if (!book) {
+
+          document.getElementById("book-title").textContent =
+            "Publication not found";
+
+          document.getElementById("status").textContent =
+            "The requested publication could not be found.";
+
+          return;
+        }
+
+        document.getElementById("book-title").textContent =
+          book.title;
+
+        document.getElementById("book-subtitle").textContent =
+          book.subtitle || "";
+
+        document.getElementById("status").textContent =
+          "Publication loaded successfully.";
+
+        const pdfLink =
+          document.getElementById("pdf-link");
+
+        pdfLink.href = book.pdf;
+
+        pdfLink.style.display =
+          "inline-block";
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        document.getElementById("book-title").textContent =
+          "Unable to load publication";
+
+        document.getElementById("status").textContent =
+          "There was a problem loading the digital library.";
+
+      }
+
+    }
+
+    loadBook();
+
+  </script>
+
+</body>
+</html>
