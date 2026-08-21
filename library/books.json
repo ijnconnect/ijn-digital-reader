@@ -1,10 +1,9 @@
 {
-  "heartbeat-18": {
-    "title": "IJN Heartbeat",
-    "subtitle": "Edition 18",
-    "category": "heartbeat",
-    "edition": 18,
-    "year": 2026,
-    "pdf": "books/heartbeat/heartbeat-18.pdf"
+  "laboratory-user-handbook-2024": {
+    "title": "Laboratory User Handbook",
+    "subtitle": "2024",
+    "category": "handbook",
+    "year": 2024,
+    "pdf": "books/handbooks/laboratory-user-handbook-2024.pdf"
   }
 }
