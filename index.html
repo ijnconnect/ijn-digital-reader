@@ -1,614 +1,2050 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>IJN Digital Reader</title>
 
+
+  <!-- POPPINS -->
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+
   <style>
+
+    :root {
+
+      --ijn-navy: #003153;
+      --ijn-blue: #2D99C9;
+
+      --white: #ffffff;
+
+      --background: #edf3f7;
+      --surface: #f8fafc;
+
+      --border: rgba(0, 49, 83, 0.10);
+
+      --text: #003153;
+      --muted: #6c7a86;
+
+    }
+
+
     * {
       box-sizing: border-box;
     }
 
+
+    html,
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #eef2f5;
-      color: #003153;
-      overflow-x: hidden;
-    }
-
-    .reader-header {
-      background: #003153;
-      color: white;
-      padding: 18px 30px;
-    }
-
-    .reader-header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .reader-header p {
-      margin: 6px 0 0;
-      opacity: 0.8;
-    }
-
-    .book-info {
-      text-align: center;
-      padding: 24px 20px 10px;
-    }
-
-    .book-info h2 {
-      margin: 0 0 8px;
-      font-size: 30px;
-    }
-
-    .book-info p {
-      margin: 0;
-      color: #66717d;
-      font-size: 18px;
-    }
-
-    #status {
-      text-align: center;
-      margin: 15px;
-      font-size: 14px;
-    }
-
-    .reader-stage {
-      width: 100%;
-      min-height: 70vh;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 20px;
-    }
-
-    #book {
-      margin: auto;
-    }
-
-    .page {
-      background: white;
-      overflow: hidden;
-    }
-
-    .page canvas {
       width: 100%;
       height: 100%;
-      display: block;
     }
 
-    .toolbar {
-      position: sticky;
-      bottom: 0;
+
+    body {
+
+      font-family: "Poppins", sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 50% 20%,
+          #ffffff 0%,
+          #f3f7fa 38%,
+          #e8f0f5 100%
+        );
+
+      overflow: hidden;
+
+    }
+
+
+    button,
+    a {
+      font-family: "Poppins", sans-serif;
+    }
+
+
+    /*
+    =========================================================
+    APP
+    =========================================================
+    */
+
+    .reader-app {
+
+      height: 100dvh;
+
+      display: flex;
+      flex-direction: column;
+
+      overflow: hidden;
+
+    }
+
+
+    /*
+    =========================================================
+    HEADER
+    =========================================================
+    */
+
+    .reader-header {
+
+      height: 74px;
+
+      flex-shrink: 0;
+
+      padding: 0 32px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      background:
+        linear-gradient(
+          135deg,
+          #003153 0%,
+          #064269 100%
+        );
+
+      color: white;
+
+      border-bottom:
+        1px solid rgba(255,255,255,0.08);
+
+      box-shadow:
+        0 4px 20px rgba(0,49,83,0.10);
+
+      position: relative;
+
+      z-index: 50;
+
+    }
+
+
+    .brand {
+
+      display: flex;
+      align-items: center;
+
+      gap: 14px;
+
+    }
+
+
+    .brand-icon {
+
+      width: 40px;
+      height: 40px;
+
+      border-radius: 12px;
 
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
 
-      padding: 14px 18px;
+      background:
+        rgba(255,255,255,0.10);
 
-      background: rgba(0, 49, 83, 0.96);
-      color: white;
+      border:
+        1px solid rgba(255,255,255,0.12);
 
-      z-index: 999;
+      font-weight: 700;
+
+      letter-spacing: -1px;
+
     }
 
-    .toolbar button {
-      border: none;
-      background: #2D99C9;
-      color: white;
 
-      padding: 10px 16px;
-      border-radius: 6px;
+    .brand-text {
 
-      font-size: 15px;
+      display: flex;
+      flex-direction: column;
+
+    }
+
+
+    .brand-title {
+
+      font-size: 17px;
+      font-weight: 600;
+
+      line-height: 1.2;
+
+    }
+
+
+    .brand-subtitle {
+
+      margin-top: 2px;
+
+      font-size: 10px;
+
+      opacity: 0.65;
+
+      letter-spacing: 0.6px;
+
+      text-transform: uppercase;
+
+    }
+
+
+    .library-label {
+
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+
+      font-size: 12px;
+
+      color:
+        rgba(255,255,255,0.75);
+
+    }
+
+
+    .library-dot {
+
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: #67c7ec;
+
+      box-shadow:
+        0 0 0 5px rgba(103,199,236,0.12);
+
+    }
+
+
+    /*
+    =========================================================
+    BOOK INFORMATION
+    =========================================================
+    */
+
+    .book-info {
+
+      flex-shrink: 0;
+
+      min-height: 87px;
+
+      padding:
+        14px 24px 10px;
+
+      text-align: center;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      position: relative;
+
+      z-index: 10;
+
+    }
+
+
+    .book-meta {
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 8px;
+
+      margin-bottom: 4px;
+
+    }
+
+
+    .category-pill {
+
+      display: inline-flex;
+      align-items: center;
+
+      min-height: 23px;
+
+      padding:
+        4px 10px;
+
+      background:
+        rgba(45,153,201,0.10);
+
+      color: var(--ijn-blue);
+
+      border:
+        1px solid rgba(45,153,201,0.16);
+
+      border-radius: 999px;
+
+      font-size: 9px;
+      font-weight: 600;
+
+      letter-spacing: 0.6px;
+
+      text-transform: uppercase;
+
+    }
+
+
+    #book-subtitle {
+
+      font-size: 11px;
+
+      color: var(--muted);
+
+      font-weight: 500;
+
+    }
+
+
+    .book-info h1 {
+
+      margin: 0;
+
+      font-size:
+        clamp(20px, 2vw, 28px);
+
+      line-height: 1.25;
+
+      font-weight: 600;
+
+      letter-spacing: -0.5px;
+
+      color: var(--ijn-navy);
+
+    }
+
+
+    #status {
+
+      margin-top: 5px;
+
+      font-size: 10px;
+
+      color: #82909b;
+
+    }
+
+
+    /*
+    =========================================================
+    READER AREA
+    =========================================================
+    */
+
+    .reader-workspace {
+
+      flex: 1;
+
+      min-height: 0;
+
+      width: 100%;
+
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+
+      padding:
+        8px 55px 12px;
+
+    }
+
+
+    /*
+    subtle library table / reading-area effect
+    */
+
+    .reader-workspace::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: min(1200px, 82vw);
+
+      height: 76%;
+
+      left: 50%;
+      top: 52%;
+
+      transform:
+        translate(-50%, -50%);
+
+      background:
+        rgba(255,255,255,0.42);
+
+      border:
+        1px solid rgba(255,255,255,0.8);
+
+      border-radius: 30px;
+
+      box-shadow:
+
+        0 30px 70px
+        rgba(0,49,83,0.07),
+
+        inset 0 1px 0
+        rgba(255,255,255,0.9);
+
+      backdrop-filter:
+        blur(8px);
+
+      pointer-events: none;
+
+    }
+
+
+    /*
+    decorative reading table shadow
+    */
+
+    .reader-workspace::after {
+
+      content: "";
+
+      position: absolute;
+
+      width: min(900px, 65vw);
+
+      height: 40px;
+
+      left: 50%;
+      bottom: 5%;
+
+      transform:
+        translateX(-50%);
+
+      border-radius: 50%;
+
+      background:
+        rgba(0,49,83,0.09);
+
+      filter: blur(25px);
+
+      pointer-events: none;
+
+    }
+
+
+    .book-stage {
+
+      width: 100%;
+      height: 100%;
+
+      position: relative;
+
+      z-index: 5;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+
+    #book {
+
+      margin: auto;
+
+    }
+
+
+    /*
+    =========================================================
+    PAGES
+    =========================================================
+    */
+
+    .page {
+
+      background: white;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 12px 35px rgba(0,49,83,0.13);
+
+    }
+
+
+    .page canvas {
+
+      width: 100%;
+      height: 100%;
+
+      display: block;
+
+    }
+
+
+    /*
+    Make PageFlip-generated elements feel more premium
+    */
+
+    .stf__parent {
+
+      margin: auto !important;
+
+      filter:
+        drop-shadow(
+          0 18px 22px rgba(0,49,83,0.12)
+        );
+
+    }
+
+
+    /*
+    =========================================================
+    SIDE PAGE TURN HINTS
+    =========================================================
+    */
+
+    .turn-hint {
+
+      position: absolute;
+
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      width: 42px;
+      height: 42px;
+
+      border-radius: 50%;
+
+      background:
+        rgba(255,255,255,0.86);
+
+      border:
+        1px solid var(--border);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: var(--ijn-navy);
+
+      font-size: 21px;
+
       cursor: pointer;
+
+      z-index: 20;
+
+      box-shadow:
+        0 8px 24px rgba(0,49,83,0.09);
+
+      backdrop-filter:
+        blur(10px);
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+
     }
 
-    .toolbar button:hover {
-      opacity: 0.9;
+
+    .turn-hint:hover {
+
+      background: white;
+
+      transform:
+        translateY(-50%)
+        scale(1.07);
+
     }
+
+
+    .turn-hint.left {
+      left: 20px;
+    }
+
+
+    .turn-hint.right {
+      right: 20px;
+    }
+
+
+    /*
+    =========================================================
+    TOOLBAR
+    =========================================================
+    */
+
+    .reader-toolbar {
+
+      height: 68px;
+
+      flex-shrink: 0;
+
+      display: grid;
+
+      grid-template-columns:
+        1fr auto 1fr;
+
+      align-items: center;
+
+      padding:
+        0 30px;
+
+      background:
+        rgba(255,255,255,0.94);
+
+      border-top:
+        1px solid var(--border);
+
+      box-shadow:
+        0 -8px 30px
+        rgba(0,49,83,0.06);
+
+      backdrop-filter:
+        blur(16px);
+
+      z-index: 100;
+
+    }
+
+
+    .toolbar-section {
+
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+
+    }
+
+
+    .toolbar-section.right {
+      justify-content: flex-end;
+    }
+
+
+    .toolbar-button {
+
+      height: 38px;
+
+      padding:
+        0 14px;
+
+      border:
+        1px solid rgba(0,49,83,0.09);
+
+      border-radius: 10px;
+
+      background: white;
+
+      color: var(--ijn-navy);
+
+      font-size: 11px;
+      font-weight: 500;
+
+      cursor: pointer;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 7px;
+
+      transition:
+        background 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+
+    }
+
+
+    .toolbar-button:hover {
+
+      background: #f5f9fc;
+
+      box-shadow:
+        0 5px 14px rgba(0,49,83,0.08);
+
+      transform:
+        translateY(-1px);
+
+    }
+
+
+    .nav-button {
+
+      width: 38px;
+
+      padding: 0;
+
+      font-size: 17px;
+
+    }
+
+
+    .page-navigation {
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      min-width: 210px;
+
+    }
+
+
+    .page-navigation-row {
+
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+    }
+
 
     #page-counter {
-      min-width: 120px;
+
+      min-width: 74px;
+
       text-align: center;
-      font-size: 14px;
+
+      font-size: 12px;
+
+      font-weight: 600;
+
+      color: var(--ijn-navy);
+
     }
+
+
+    .progress-track {
+
+      width: 180px;
+      height: 3px;
+
+      margin-top: 7px;
+
+      overflow: hidden;
+
+      border-radius: 20px;
+
+      background:
+        #dde7ed;
+
+    }
+
+
+    #progress-bar {
+
+      width: 0%;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          #2D99C9,
+          #65c3e8
+        );
+
+      border-radius: inherit;
+
+      transition:
+        width 0.3s ease;
+
+    }
+
+
+    /*
+    =========================================================
+    LOADING
+    =========================================================
+    */
+
+    .loading-spinner {
+
+      display: inline-block;
+
+      width: 11px;
+      height: 11px;
+
+      margin-right: 6px;
+
+      border:
+        2px solid rgba(0,49,83,0.12);
+
+      border-top-color:
+        var(--ijn-blue);
+
+      border-radius: 50%;
+
+      animation:
+        spin 0.8s linear infinite;
+
+    }
+
+
+    @keyframes spin {
+
+      to {
+        transform:
+          rotate(360deg);
+      }
+
+    }
+
 
     .error {
+
       color: #b00020;
-      font-weight: 600;
+
+      font-weight: 500;
+
     }
 
-    @media (max-width: 768px) {
+
+    /*
+    =========================================================
+    MOBILE
+    =========================================================
+    */
+
+    @media
+    (max-width: 700px) {
+
 
       .reader-header {
-        padding: 14px 18px;
+
+        height: 60px;
+
+        padding:
+          0 16px;
+
       }
 
-      .reader-header h1 {
-        font-size: 20px;
+
+      .brand-icon {
+
+        width: 34px;
+        height: 34px;
+
+        border-radius: 9px;
+
       }
 
-      .book-info h2 {
-        font-size: 23px;
+
+      .brand-title {
+        font-size: 14px;
       }
 
-      .book-info p {
-        font-size: 15px;
+
+      .brand-subtitle {
+        font-size: 8px;
       }
 
-      .reader-stage {
-        padding: 8px;
-        min-height: 68vh;
+
+      .library-label {
+        display: none;
       }
 
-      .toolbar {
-        gap: 8px;
-        padding: 10px;
+
+      .book-info {
+
+        min-height: 78px;
+
+        padding:
+          10px 14px 6px;
+
       }
 
-      .toolbar button {
-        padding: 9px 13px;
+
+      .book-info h1 {
+
+        font-size: 18px;
+
       }
+
+
+      #status {
+        font-size: 9px;
+      }
+
+
+      .reader-workspace {
+
+        padding:
+          5px 8px;
+
+      }
+
+
+      .reader-workspace::before {
+
+        width: 96vw;
+        height: 94%;
+
+        border-radius: 20px;
+
+      }
+
+
+      .reader-workspace::after {
+        display: none;
+      }
+
+
+      .turn-hint {
+        display: none;
+      }
+
+
+      .reader-toolbar {
+
+        height: 62px;
+
+        padding:
+          0 12px;
+
+        grid-template-columns:
+          auto 1fr auto;
+
+      }
+
+
+      .toolbar-button .button-label {
+        display: none;
+      }
+
+
+      .toolbar-button {
+
+        width: 38px;
+        height: 38px;
+
+        padding: 0;
+
+      }
+
+
+      .page-navigation {
+
+        min-width: unset;
+
+        width: 100%;
+
+      }
+
+
+      .progress-track {
+
+        width: 110px;
+
+      }
+
 
       #page-counter {
-        min-width: 90px;
+
+        min-width: 64px;
+
+        font-size: 11px;
+
       }
+
+
     }
+
+
   </style>
+
 </head>
+
 
 <body>
 
+
+<div class="reader-app">
+
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
   <header class="reader-header">
-    <h1>IJN Digital Reader</h1>
-    <p>Institut Jantung Negara</p>
-  </header>
 
-  <section class="book-info">
-    <h2 id="book-title">Loading publication...</h2>
-    <p id="book-subtitle"></p>
-  </section>
 
-  <div id="status">
-    Preparing publication...
-  </div>
+    <div class="brand">
 
-  <div class="reader-stage">
-    <div id="book"></div>
-  </div>
+      <div class="brand-icon">
+        IJN
+      </div>
 
-  <div class="toolbar">
-    <button id="prev-btn">← Previous</button>
 
-    <div id="page-counter">
-      Page 1
+      <div class="brand-text">
+
+        <div class="brand-title">
+          Digital Library
+        </div>
+
+        <div class="brand-subtitle">
+          Institut Jantung Negara
+        </div>
+
+      </div>
+
     </div>
 
-    <button id="next-btn">Next →</button>
-  </div>
+
+    <div class="library-label">
+
+      <span class="library-dot"></span>
+
+      Interactive Publication Reader
+
+    </div>
 
 
-  <!-- PAGE FLIP LIBRARY -->
-  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+  </header>
 
 
-  <script type="module">
 
-    import * as pdfjsLib from
-      "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.mjs";
+  <!-- =====================================================
+       BOOK INFO
+       ===================================================== -->
 
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.worker.mjs";
-
-
-    async function loadBook() {
-
-      const params =
-        new URLSearchParams(window.location.search);
-
-      const bookId =
-        params.get("book");
+  <section class="book-info">
 
 
-      const status =
-        document.getElementById("status");
+    <div class="book-meta">
 
-      const titleElement =
-        document.getElementById("book-title");
+      <span
+        class="category-pill"
+        id="category-label"
+      >
+        Publication
+      </span>
 
-      const subtitleElement =
-        document.getElementById("book-subtitle");
+      <span id="book-subtitle"></span>
 
-      const bookContainer =
-        document.getElementById("book");
-
-      const pageCounter =
-        document.getElementById("page-counter");
+    </div>
 
 
-      if (!bookId) {
+    <h1 id="book-title">
+      Loading publication...
+    </h1>
 
-        titleElement.textContent =
-          "No publication selected";
 
-        status.innerHTML =
-          '<span class="error">Please use a valid publication link.</span>';
+    <div id="status">
 
-        return;
+      <span class="loading-spinner"></span>
+
+      Preparing publication...
+
+    </div>
+
+
+  </section>
+
+
+
+  <!-- =====================================================
+       BOOK WORKSPACE
+       ===================================================== -->
+
+  <main class="reader-workspace">
+
+
+    <button
+      class="turn-hint left"
+      id="side-prev"
+      aria-label="Previous page"
+    >
+      ‹
+    </button>
+
+
+    <div class="book-stage">
+
+      <div id="book"></div>
+
+    </div>
+
+
+    <button
+      class="turn-hint right"
+      id="side-next"
+      aria-label="Next page"
+    >
+      ›
+    </button>
+
+
+  </main>
+
+
+
+  <!-- =====================================================
+       TOOLBAR
+       ===================================================== -->
+
+  <footer class="reader-toolbar">
+
+
+    <!-- LEFT -->
+
+    <div class="toolbar-section">
+
+
+      <button
+        class="toolbar-button"
+        id="download-btn"
+      >
+
+        <span>
+          ↓
+        </span>
+
+        <span class="button-label">
+          Download PDF
+        </span>
+
+      </button>
+
+
+    </div>
+
+
+
+    <!-- CENTER -->
+
+    <div class="page-navigation">
+
+
+      <div class="page-navigation-row">
+
+
+        <button
+          class="toolbar-button nav-button"
+          id="prev-btn"
+          aria-label="Previous page"
+        >
+          ‹
+        </button>
+
+
+        <div id="page-counter">
+          1 / 1
+        </div>
+
+
+        <button
+          class="toolbar-button nav-button"
+          id="next-btn"
+          aria-label="Next page"
+        >
+          ›
+        </button>
+
+
+      </div>
+
+
+      <div class="progress-track">
+
+        <div id="progress-bar"></div>
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- RIGHT -->
+
+    <div class="toolbar-section right">
+
+
+      <button
+        class="toolbar-button"
+        id="fullscreen-btn"
+      >
+
+        <span>
+          ⛶
+        </span>
+
+        <span class="button-label">
+          Fullscreen
+        </span>
+
+      </button>
+
+
+    </div>
+
+
+  </footer>
+
+
+</div>
+
+
+
+<!-- =======================================================
+     ST PAGE FLIP
+     ======================================================= -->
+
+<script
+  src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js">
+</script>
+
+
+
+<script type="module">
+
+
+  /*
+  =========================================================
+  PDF JS
+  =========================================================
+  */
+
+
+  import * as pdfjsLib from
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.mjs";
+
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.worker.mjs";
+
+
+
+  /*
+  =========================================================
+  LOAD BOOK
+  =========================================================
+  */
+
+
+  async function loadBook() {
+
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const bookId =
+      params.get("book");
+
+
+    const status =
+      document.getElementById("status");
+
+
+    const titleElement =
+      document.getElementById(
+        "book-title"
+      );
+
+
+    const subtitleElement =
+      document.getElementById(
+        "book-subtitle"
+      );
+
+
+    const categoryLabel =
+      document.getElementById(
+        "category-label"
+      );
+
+
+    const bookContainer =
+      document.getElementById(
+        "book"
+      );
+
+
+    const pageCounter =
+      document.getElementById(
+        "page-counter"
+      );
+
+
+    const progressBar =
+      document.getElementById(
+        "progress-bar"
+      );
+
+
+    /*
+    =========================================================
+    NO BOOK ID
+    =========================================================
+    */
+
+
+    if (!bookId) {
+
+
+      titleElement.textContent =
+        "No publication selected";
+
+
+      status.innerHTML =
+        '<span class="error">Please use a valid publication link.</span>';
+
+
+      return;
+
+    }
+
+
+
+    try {
+
+
+      /*
+      =======================================================
+      BOOK INFORMATION
+      =======================================================
+      */
+
+
+      const response =
+        await fetch(
+          "library/books.json"
+        );
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          "Unable to load books.json"
+        );
+
       }
 
 
-      try {
-
-        /*
-        -------------------------
-        GET BOOK INFORMATION
-        -------------------------
-        */
-
-        const response =
-          await fetch("library/books.json");
-
-        if (!response.ok) {
-          throw new Error("Unable to load books.json");
-        }
+      const books =
+        await response.json();
 
 
-        const books =
-          await response.json();
+      const book =
+        books[bookId];
 
 
-        const book =
-          books[bookId];
 
-
-        if (!book) {
-
-          titleElement.textContent =
-            "Publication not found";
-
-          status.innerHTML =
-            '<span class="error">This publication does not exist.</span>';
-
-          return;
-        }
+      if (!book) {
 
 
         titleElement.textContent =
-          book.title;
-
-        subtitleElement.textContent =
-          book.subtitle || "";
+          "Publication not found";
 
 
-        /*
-        -------------------------
-        CHECK PDF PATH
-        -------------------------
-        */
-
-        if (!book.pdf) {
-          throw new Error(
-            `PDF path missing for ${bookId}`
-          );
-        }
+        status.innerHTML =
+          '<span class="error">This publication does not exist.</span>';
 
 
-        /*
-        -------------------------
-        BUILD PDF URL
-        -------------------------
-        */
+        return;
 
-        const pdfUrl =
-          new URL(
-            book.pdf,
-            window.location.href
-          ).href;
+      }
 
 
-        console.log(
-          "Loading PDF:",
-          pdfUrl
+
+      /*
+      =======================================================
+      DISPLAY METADATA
+      =======================================================
+      */
+
+
+      titleElement.textContent =
+        book.title;
+
+
+      subtitleElement.textContent =
+        book.subtitle || "";
+
+
+      if (book.category) {
+
+
+        categoryLabel.textContent =
+          book.category
+            .replaceAll("-", " ");
+
+
+      }
+
+
+
+      /*
+      =======================================================
+      PDF PATH
+      =======================================================
+      */
+
+
+      if (!book.pdf) {
+
+        throw new Error(
+          `PDF path missing for ${bookId}`
+        );
+
+      }
+
+
+
+      const pdfUrl =
+        new URL(
+          book.pdf,
+          window.location.href
+        ).href;
+
+
+      console.log(
+        "Loading PDF:",
+        pdfUrl
+      );
+
+
+
+      status.innerHTML =
+        '<span class="loading-spinner"></span> Loading publication...';
+
+
+
+      /*
+      =======================================================
+      PDF
+      =======================================================
+      */
+
+
+      const pdf =
+        await pdfjsLib
+          .getDocument({
+            url: pdfUrl
+          })
+          .promise;
+
+
+
+      status.innerHTML =
+        '<span class="loading-spinner"></span> Preparing pages...';
+
+
+
+      /*
+      =======================================================
+      FIRST PAGE SIZE
+      =======================================================
+      */
+
+
+      const firstPage =
+        await pdf.getPage(1);
+
+
+      const naturalViewport =
+        firstPage.getViewport({
+          scale: 1
+        });
+
+
+      const pdfRatio =
+        naturalViewport.height /
+        naturalViewport.width;
+
+
+
+      /*
+      =======================================================
+      IMPORTANT:
+      CALCULATE SIZE BASED ON AVAILABLE VIEWPORT
+      =======================================================
+      */
+
+
+      const workspace =
+        document.querySelector(
+          ".reader-workspace"
         );
 
 
-        status.textContent =
-          "Loading publication...";
+      const availableHeight =
+        workspace.clientHeight - 24;
 
 
-        /*
-        -------------------------
-        LOAD PDF
-        -------------------------
-        */
-
-        const pdf =
-          await pdfjsLib.getDocument({
-            url: pdfUrl
-          }).promise;
+      const availableWidth =
+        workspace.clientWidth - 130;
 
 
-        status.textContent =
-          `Preparing ${pdf.numPages} pages...`;
+
+      /*
+      In landscape mode we need enough width
+      for TWO pages.
+      */
 
 
-        /*
-        -------------------------
-        CREATE HTML PAGES
-        -------------------------
-        */
-
-        const pageElements = [];
+      const maxPageWidthFromScreen =
+        availableWidth / 2;
 
 
-        for (
-          let pageNumber = 1;
-          pageNumber <= pdf.numPages;
-          pageNumber++
-        ) {
-
-          const page =
-            await pdf.getPage(pageNumber);
+      const maxPageWidthFromHeight =
+        availableHeight / pdfRatio;
 
 
-          const baseViewport =
-            page.getViewport({
-              scale: 1
-            });
+      let desiredPageWidth =
+        Math.min(
+          maxPageWidthFromScreen,
+          maxPageWidthFromHeight
+        );
 
 
-          /*
-          Render at a reasonable quality.
-          */
-
-          const scale = 1.5;
-
-          const viewport =
-            page.getViewport({
-              scale: scale
-            });
+      /*
+      Give the book some breathing room.
+      */
 
 
-          /*
-          CREATE PAGE
-          */
-
-          const pageElement =
-            document.createElement("div");
-
-          pageElement.className =
-            "page";
+      desiredPageWidth *= 0.88;
 
 
-          /*
-          Make first and last page act
-          more like book covers.
-          */
-
-          if (
-            pageNumber === 1 ||
-            pageNumber === pdf.numPages
-          ) {
-            pageElement.dataset.density =
-              "hard";
-          }
+      /*
+      Prevent ridiculously large/small pages.
+      */
 
 
-          /*
-          CREATE CANVAS
-          */
-
-          const canvas =
-            document.createElement("canvas");
-
-          const context =
-            canvas.getContext("2d");
-
-
-          canvas.width =
-            Math.floor(viewport.width);
-
-          canvas.height =
-            Math.floor(viewport.height);
+      desiredPageWidth =
+        Math.max(
+          250,
+          Math.min(
+            desiredPageWidth,
+            620
+          )
+        );
 
 
-          pageElement.appendChild(canvas);
-
-          bookContainer.appendChild(pageElement);
-
-          pageElements.push(pageElement);
+      const desiredPageHeight =
+        desiredPageWidth *
+        pdfRatio;
 
 
-          /*
-          RENDER PAGE
-          */
 
-          await page.render({
+      console.log(
+        "Reader page size:",
+        desiredPageWidth,
+        desiredPageHeight
+      );
 
-            canvasContext: context,
-            viewport: viewport
 
-          }).promise;
 
-        }
+      /*
+      =======================================================
+      RENDER PAGES
+      =======================================================
+      */
+
+
+      for (
+
+        let pageNumber = 1;
+
+        pageNumber <= pdf.numPages;
+
+        pageNumber++
+
+      ) {
+
+
+        const page =
+          await pdf.getPage(
+            pageNumber
+          );
+
 
 
         /*
-        -------------------------
-        GET PDF PAGE RATIO
-        -------------------------
+        Render quality.
+
+        1.5 gives us a good balance between
+        sharpness and performance.
         */
 
-        const firstPage =
-          await pdf.getPage(1);
 
-        const originalViewport =
-          firstPage.getViewport({
-            scale: 1
+        const renderViewport =
+          page.getViewport({
+            scale: 1.5
           });
 
 
-        const pageWidth =
-          originalViewport.width;
 
-        const pageHeight =
-          originalViewport.height;
-
-
-        /*
-        -------------------------
-        CREATE PAGE FLIP
-        -------------------------
-        */
-
-        const pageFlip =
-          new St.PageFlip(
-            bookContainer,
-            {
-
-              width: pageWidth,
-
-              height: pageHeight,
-
-              size: "stretch",
-
-              minWidth: 280,
-
-              maxWidth: 650,
-
-              minHeight: 380,
-
-              maxHeight: 900,
-
-              maxShadowOpacity: 0.45,
-
-              showCover: true,
-
-              mobileScrollSupport: false,
-
-              usePortrait: true,
-
-              flippingTime: 700,
-
-              drawShadow: true,
-
-              autoSize: true
-
-            }
+        const pageElement =
+          document.createElement(
+            "div"
           );
 
 
-        /*
-        Load the HTML pages
-        */
+        pageElement.className =
+          "page";
 
-        pageFlip.loadFromHTML(
-          document.querySelectorAll(".page")
-        );
 
 
         /*
-        -------------------------
-        PAGE COUNTER
-        -------------------------
+        Hard cover
         */
 
-        function updatePageCounter(index) {
 
-          const humanPage =
-            index + 1;
+        if (
 
-          pageCounter.textContent =
-            `${humanPage} / ${pdf.numPages}`;
+          pageNumber === 1 ||
+
+          pageNumber === pdf.numPages
+
+        ) {
+
+
+          pageElement.dataset.density =
+            "hard";
+
 
         }
 
 
-        updatePageCounter(0);
+
+        const canvas =
+          document.createElement(
+            "canvas"
+          );
 
 
-        pageFlip.on(
-          "flip",
-          (event) => {
+        const context =
+          canvas.getContext(
+            "2d"
+          );
 
-            updatePageCounter(
-              event.data
+
+
+        canvas.width =
+          Math.floor(
+            renderViewport.width
+          );
+
+
+        canvas.height =
+          Math.floor(
+            renderViewport.height
+          );
+
+
+
+        pageElement.appendChild(
+          canvas
+        );
+
+
+        bookContainer.appendChild(
+          pageElement
+        );
+
+
+
+        await page.render({
+
+          canvasContext:
+            context,
+
+          viewport:
+            renderViewport
+
+        }).promise;
+
+
+      }
+
+
+
+      /*
+      =======================================================
+      CREATE FLIPBOOK
+      =======================================================
+      */
+
+
+      const pageFlip =
+        new St.PageFlip(
+
+          bookContainer,
+
+          {
+
+
+            /*
+            Use our calculated display size.
+            */
+
+
+            width:
+              desiredPageWidth,
+
+
+            height:
+              desiredPageHeight,
+
+
+            size:
+              "fixed",
+
+
+            showCover:
+              true,
+
+
+            usePortrait:
+              true,
+
+
+            drawShadow:
+              true,
+
+
+            maxShadowOpacity:
+              0.35,
+
+
+            flippingTime:
+              750,
+
+
+            mobileScrollSupport:
+              false,
+
+
+            autoSize:
+              true
+
+
+          }
+
+        );
+
+
+
+      pageFlip.loadFromHTML(
+
+        document.querySelectorAll(
+          ".page"
+        )
+
+      );
+
+
+
+      /*
+      =======================================================
+      PAGE COUNTER
+      =======================================================
+      */
+
+
+      function updatePageCounter(
+        index
+      ) {
+
+
+        const currentPage =
+          index + 1;
+
+
+        pageCounter.textContent =
+          `${currentPage} / ${pdf.numPages}`;
+
+
+
+        const progress =
+          (
+            currentPage /
+            pdf.numPages
+          ) * 100;
+
+
+        progressBar.style.width =
+          `${progress}%`;
+
+
+      }
+
+
+
+      updatePageCounter(0);
+
+
+
+      pageFlip.on(
+        "flip",
+        event => {
+
+          updatePageCounter(
+            event.data
+          );
+
+        }
+      );
+
+
+
+      /*
+      =======================================================
+      NAVIGATION
+      =======================================================
+      */
+
+
+      function previousPage() {
+
+        pageFlip.flipPrev();
+
+      }
+
+
+      function nextPage() {
+
+        pageFlip.flipNext();
+
+      }
+
+
+
+      document
+        .getElementById(
+          "prev-btn"
+        )
+        .addEventListener(
+          "click",
+          previousPage
+        );
+
+
+      document
+        .getElementById(
+          "next-btn"
+        )
+        .addEventListener(
+          "click",
+          nextPage
+        );
+
+
+      document
+        .getElementById(
+          "side-prev"
+        )
+        .addEventListener(
+          "click",
+          previousPage
+        );
+
+
+      document
+        .getElementById(
+          "side-next"
+        )
+        .addEventListener(
+          "click",
+          nextPage
+        );
+
+
+
+      /*
+      =======================================================
+      DOWNLOAD
+      =======================================================
+      */
+
+
+      document
+        .getElementById(
+          "download-btn"
+        )
+        .addEventListener(
+          "click",
+          () => {
+
+            window.open(
+              pdfUrl,
+              "_blank"
             );
 
           }
         );
 
 
-        /*
-        -------------------------
-        PREVIOUS BUTTON
-        -------------------------
-        */
 
-        document
-          .getElementById("prev-btn")
-          .addEventListener(
-            "click",
-            () => {
+      /*
+      =======================================================
+      FULLSCREEN
+      =======================================================
+      */
 
-              pageFlip.flipPrev();
+
+      document
+        .getElementById(
+          "fullscreen-btn"
+        )
+        .addEventListener(
+          "click",
+          async () => {
+
+
+            if (
+              !document.fullscreenElement
+            ) {
+
+
+              await document
+                .documentElement
+                .requestFullscreen();
+
 
             }
-          );
+
+            else {
 
 
-        /*
-        -------------------------
-        NEXT BUTTON
-        -------------------------
-        */
+              await document
+                .exitFullscreen();
 
-        document
-          .getElementById("next-btn")
-          .addEventListener(
-            "click",
-            () => {
-
-              pageFlip.flipNext();
 
             }
-          );
 
 
-        status.textContent =
-          `${pdf.numPages} pages ready. Swipe or drag the page to read.`;
-
-      }
-
-
-      catch (error) {
-
-        console.error(
-          "IJN Digital Reader Error:",
-          error
+          }
         );
 
-        status.innerHTML =
-          '<span class="error">Unable to create flipbook. Please check the browser console.</span>';
 
-      }
+
+      /*
+      =======================================================
+      KEYBOARD
+      =======================================================
+      */
+
+
+      document.addEventListener(
+
+        "keydown",
+
+        event => {
+
+
+          if (
+            event.key ===
+            "ArrowRight"
+          ) {
+
+            nextPage();
+
+          }
+
+
+          if (
+            event.key ===
+            "ArrowLeft"
+          ) {
+
+            previousPage();
+
+          }
+
+
+        }
+
+      );
+
+
+
+      /*
+      =======================================================
+      READY
+      =======================================================
+      */
+
+
+      status.textContent =
+        `${pdf.numPages} pages · Swipe, drag or use the arrows`;
+
 
     }
 
 
-    loadBook();
+    catch (error) {
 
-  </script>
+
+      console.error(
+        "IJN Digital Reader Error:",
+        error
+      );
+
+
+      status.innerHTML =
+        '<span class="error">Unable to create flipbook.</span>';
+
+
+    }
+
+
+  }
+
+
+
+  /*
+  =========================================================
+  START
+  =========================================================
+  */
+
+
+  loadBook();
+
+
+</script>
+
 
 </body>
+
 </html>
