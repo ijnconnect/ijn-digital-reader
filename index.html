@@ -212,9 +212,23 @@
         LOAD PDF
         -------------------------
         */
+if (!book.pdf) {
+  throw new Error(
+    `PDF path is missing for book: ${bookId}`
+  );
+}
 
-        const pdf =
-          await pdfjsLib.getDocument(book.pdf).promise;
+const pdfUrl = new URL(
+  book.pdf,
+  window.location.href
+).href;
+
+console.log("Loading PDF:", pdfUrl);
+
+const pdf =
+  await pdfjsLib.getDocument({
+    url: pdfUrl
+  }).promise;
 
 
         status.textContent =
