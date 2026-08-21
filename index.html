@@ -16,6 +16,7 @@
       font-family: Arial, sans-serif;
       background: #eef2f5;
       color: #003153;
+      overflow-x: hidden;
     }
 
     .reader-header {
@@ -36,7 +37,7 @@
 
     .book-info {
       text-align: center;
-      padding: 28px 20px 15px;
+      padding: 24px 20px 10px;
     }
 
     .book-info h2 {
@@ -52,38 +53,73 @@
 
     #status {
       text-align: center;
-      margin: 20px;
-      font-size: 16px;
+      margin: 15px;
+      font-size: 14px;
     }
 
-    #pdf-pages {
+    .reader-stage {
+      width: 100%;
+      min-height: 70vh;
+
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 25px;
+      justify-content: center;
+
       padding: 20px;
     }
 
-    .pdf-page {
+    #book {
+      margin: auto;
+    }
+
+    .page {
       background: white;
-      box-shadow: 0 8px 25px rgba(0, 49, 83, 0.12);
-      border-radius: 4px;
       overflow: hidden;
-      max-width: 100%;
     }
 
-    .pdf-page canvas {
+    .page canvas {
+      width: 100%;
+      height: 100%;
       display: block;
-      max-width: 100%;
-      height: auto;
     }
 
-    .page-number {
+    .toolbar {
+      position: sticky;
+      bottom: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+
+      padding: 14px 18px;
+
+      background: rgba(0, 49, 83, 0.96);
+      color: white;
+
+      z-index: 999;
+    }
+
+    .toolbar button {
+      border: none;
+      background: #2D99C9;
+      color: white;
+
+      padding: 10px 16px;
+      border-radius: 6px;
+
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .toolbar button:hover {
+      opacity: 0.9;
+    }
+
+    #page-counter {
+      min-width: 120px;
       text-align: center;
-      padding: 10px;
-      color: #65727c;
-      font-size: 13px;
-      background: white;
+      font-size: 14px;
     }
 
     .error {
@@ -94,7 +130,7 @@
     @media (max-width: 768px) {
 
       .reader-header {
-        padding: 15px 18px;
+        padding: 14px 18px;
       }
 
       .reader-header h1 {
@@ -102,12 +138,29 @@
       }
 
       .book-info h2 {
-        font-size: 24px;
+        font-size: 23px;
       }
 
-      #pdf-pages {
+      .book-info p {
+        font-size: 15px;
+      }
+
+      .reader-stage {
+        padding: 8px;
+        min-height: 68vh;
+      }
+
+      .toolbar {
+        gap: 8px;
         padding: 10px;
-        gap: 18px;
+      }
+
+      .toolbar button {
+        padding: 9px 13px;
+      }
+
+      #page-counter {
+        min-width: 90px;
       }
     }
   </style>
@@ -129,7 +182,24 @@
     Preparing publication...
   </div>
 
-  <main id="pdf-pages"></main>
+  <div class="reader-stage">
+    <div id="book"></div>
+  </div>
+
+  <div class="toolbar">
+    <button id="prev-btn">← Previous</button>
+
+    <div id="page-counter">
+      Page 1
+    </div>
+
+    <button id="next-btn">Next →</button>
+  </div>
+
+
+  <!-- PAGE FLIP LIBRARY -->
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+
 
   <script type="module">
 
@@ -142,13 +212,27 @@
 
     async function loadBook() {
 
-      const params = new URLSearchParams(window.location.search);
-      const bookId = params.get("book");
+      const params =
+        new URLSearchParams(window.location.search);
 
-      const status = document.getElementById("status");
-      const pagesContainer = document.getElementById("pdf-pages");
-      const titleElement = document.getElementById("book-title");
-      const subtitleElement = document.getElementById("book-subtitle");
+      const bookId =
+        params.get("book");
+
+
+      const status =
+        document.getElementById("status");
+
+      const titleElement =
+        document.getElementById("book-title");
+
+      const subtitleElement =
+        document.getElementById("book-subtitle");
+
+      const bookContainer =
+        document.getElementById("book");
+
+      const pageCounter =
+        document.getElementById("page-counter");
 
 
       if (!bookId) {
@@ -178,8 +262,10 @@
           throw new Error("Unable to load books.json");
         }
 
+
         const books =
           await response.json();
+
 
         const book =
           books[bookId];
@@ -191,7 +277,7 @@
             "Publication not found";
 
           status.innerHTML =
-            '<span class="error">This publication does not exist in the digital library.</span>';
+            '<span class="error">This publication does not exist.</span>';
 
           return;
         }
@@ -212,14 +298,14 @@
 
         if (!book.pdf) {
           throw new Error(
-            `PDF path missing for book: ${bookId}`
+            `PDF path missing for ${bookId}`
           );
         }
 
 
         /*
         -------------------------
-        BUILD FULL PDF URL
+        BUILD PDF URL
         -------------------------
         */
 
@@ -229,14 +315,15 @@
             window.location.href
           ).href;
 
+
         console.log(
-          "Loading PDF from:",
+          "Loading PDF:",
           pdfUrl
         );
 
 
         status.textContent =
-          "Loading PDF...";
+          "Loading publication...";
 
 
         /*
@@ -245,24 +332,24 @@
         -------------------------
         */
 
-        const loadingTask =
-          pdfjsLib.getDocument({
-            url: pdfUrl
-          });
-
         const pdf =
-          await loadingTask.promise;
+          await pdfjsLib.getDocument({
+            url: pdfUrl
+          }).promise;
 
 
         status.textContent =
-          `Rendering ${pdf.numPages} pages...`;
+          `Preparing ${pdf.numPages} pages...`;
 
 
         /*
         -------------------------
-        RENDER EVERY PAGE
+        CREATE HTML PAGES
         -------------------------
         */
+
+        const pageElements = [];
+
 
         for (
           let pageNumber = 1;
@@ -274,9 +361,14 @@
             await pdf.getPage(pageNumber);
 
 
+          const baseViewport =
+            page.getViewport({
+              scale: 1
+            });
+
+
           /*
-          Higher number = sharper PDF,
-          but heavier browser workload.
+          Render at a reasonable quality.
           */
 
           const scale = 1.5;
@@ -288,18 +380,32 @@
 
 
           /*
-          PAGE WRAPPER
+          CREATE PAGE
           */
 
-          const pageWrapper =
+          const pageElement =
             document.createElement("div");
 
-          pageWrapper.className =
-            "pdf-page";
+          pageElement.className =
+            "page";
 
 
           /*
-          CANVAS
+          Make first and last page act
+          more like book covers.
+          */
+
+          if (
+            pageNumber === 1 ||
+            pageNumber === pdf.numPages
+          ) {
+            pageElement.dataset.density =
+              "hard";
+          }
+
+
+          /*
+          CREATE CANVAS
           */
 
           const canvas =
@@ -316,49 +422,174 @@
             Math.floor(viewport.height);
 
 
-          pageWrapper.appendChild(canvas);
+          pageElement.appendChild(canvas);
+
+          bookContainer.appendChild(pageElement);
+
+          pageElements.push(pageElement);
 
 
           /*
-          PAGE NUMBER
+          RENDER PAGE
           */
 
-          const pageLabel =
-            document.createElement("div");
+          await page.render({
 
-          pageLabel.className =
-            "page-number";
-
-          pageLabel.textContent =
-            `Page ${pageNumber} of ${pdf.numPages}`;
-
-
-          pageWrapper.appendChild(pageLabel);
-
-          pagesContainer.appendChild(pageWrapper);
-
-
-          /*
-          RENDER PDF PAGE
-          */
-
-          const renderContext = {
             canvasContext: context,
             viewport: viewport
-          };
 
-          await page.render(
-            renderContext
-          ).promise;
+          }).promise;
 
         }
 
 
-        status.textContent =
-          `${pdf.numPages} pages loaded successfully.`;
+        /*
+        -------------------------
+        GET PDF PAGE RATIO
+        -------------------------
+        */
 
+        const firstPage =
+          await pdf.getPage(1);
+
+        const originalViewport =
+          firstPage.getViewport({
+            scale: 1
+          });
+
+
+        const pageWidth =
+          originalViewport.width;
+
+        const pageHeight =
+          originalViewport.height;
+
+
+        /*
+        -------------------------
+        CREATE PAGE FLIP
+        -------------------------
+        */
+
+        const pageFlip =
+          new St.PageFlip(
+            bookContainer,
+            {
+
+              width: pageWidth,
+
+              height: pageHeight,
+
+              size: "stretch",
+
+              minWidth: 280,
+
+              maxWidth: 650,
+
+              minHeight: 380,
+
+              maxHeight: 900,
+
+              maxShadowOpacity: 0.45,
+
+              showCover: true,
+
+              mobileScrollSupport: false,
+
+              usePortrait: true,
+
+              flippingTime: 700,
+
+              drawShadow: true,
+
+              autoSize: true
+
+            }
+          );
+
+
+        /*
+        Load the HTML pages
+        */
+
+        pageFlip.loadFromHTML(
+          document.querySelectorAll(".page")
+        );
+
+
+        /*
+        -------------------------
+        PAGE COUNTER
+        -------------------------
+        */
+
+        function updatePageCounter(index) {
+
+          const humanPage =
+            index + 1;
+
+          pageCounter.textContent =
+            `${humanPage} / ${pdf.numPages}`;
+
+        }
+
+
+        updatePageCounter(0);
+
+
+        pageFlip.on(
+          "flip",
+          (event) => {
+
+            updatePageCounter(
+              event.data
+            );
+
+          }
+        );
+
+
+        /*
+        -------------------------
+        PREVIOUS BUTTON
+        -------------------------
+        */
+
+        document
+          .getElementById("prev-btn")
+          .addEventListener(
+            "click",
+            () => {
+
+              pageFlip.flipPrev();
+
+            }
+          );
+
+
+        /*
+        -------------------------
+        NEXT BUTTON
+        -------------------------
+        */
+
+        document
+          .getElementById("next-btn")
+          .addEventListener(
+            "click",
+            () => {
+
+              pageFlip.flipNext();
+
+            }
+          );
+
+
+        status.textContent =
+          `${pdf.numPages} pages ready. Swipe or drag the page to read.`;
 
       }
+
 
       catch (error) {
 
@@ -368,7 +599,7 @@
         );
 
         status.innerHTML =
-          '<span class="error">Unable to load the PDF. Please check the browser console.</span>';
+          '<span class="error">Unable to create flipbook. Please check the browser console.</span>';
 
       }
 
