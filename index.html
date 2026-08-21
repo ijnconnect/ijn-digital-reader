@@ -1,125 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>IJN Digital Reader</title>
 
-
-  <!-- POPPINS -->
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
 
-
   <style>
-
     :root {
-
       --ijn-navy: #003153;
       --ijn-blue: #2D99C9;
-
+      --bg: #eef3f7;
       --white: #ffffff;
-
-      --background: #edf3f7;
-      --surface: #f8fafc;
-
+      --muted: #73808b;
       --border: rgba(0, 49, 83, 0.10);
-
-      --text: #003153;
-      --muted: #6c7a86;
-
     }
-
 
     * {
       box-sizing: border-box;
     }
 
-
     html,
     body {
       margin: 0;
-      width: 100%;
-      height: 100%;
+      min-height: 100%;
     }
-
 
     body {
-
       font-family: "Poppins", sans-serif;
-
-      color: var(--text);
-
       background:
-        radial-gradient(
-          circle at 50% 20%,
-          #ffffff 0%,
-          #f3f7fa 38%,
-          #e8f0f5 100%
+        linear-gradient(
+          180deg,
+          #f8fbfd 0%,
+          #eef3f7 100%
         );
-
-      overflow: hidden;
-
+      color: var(--ijn-navy);
     }
 
-
-    button,
-    a {
+    button {
       font-family: "Poppins", sans-serif;
     }
 
 
-    /*
-    =========================================================
-    APP
-    =========================================================
-    */
-
-    .reader-app {
-
-      height: 100dvh;
-
-      display: flex;
-      flex-direction: column;
-
-      overflow: hidden;
-
-    }
-
-
-    /*
-    =========================================================
-    HEADER
-    =========================================================
-    */
+    /* =========================
+       HEADER
+       ========================= */
 
     .reader-header {
-
-      height: 74px;
-
-      flex-shrink: 0;
-
-      padding: 0 32px;
+      min-height: 78px;
+      padding: 15px 34px;
 
       display: flex;
       align-items: center;
@@ -129,320 +66,206 @@
         linear-gradient(
           135deg,
           #003153 0%,
-          #064269 100%
+          #06466e 100%
         );
 
       color: white;
 
-      border-bottom:
-        1px solid rgba(255,255,255,0.08);
-
       box-shadow:
-        0 4px 20px rgba(0,49,83,0.10);
-
-      position: relative;
-
-      z-index: 50;
-
+        0 4px 20px rgba(0,49,83,0.12);
     }
-
 
     .brand {
-
       display: flex;
       align-items: center;
-
       gap: 14px;
-
     }
 
-
     .brand-icon {
-
-      width: 40px;
-      height: 40px;
-
-      border-radius: 12px;
+      width: 42px;
+      height: 42px;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
+      border-radius: 11px;
+
       background:
-        rgba(255,255,255,0.10);
+        rgba(255,255,255,0.12);
 
       border:
-        1px solid rgba(255,255,255,0.12);
+        1px solid rgba(255,255,255,0.15);
 
+      font-size: 14px;
       font-weight: 700;
-
-      letter-spacing: -1px;
-
     }
-
-
-    .brand-text {
-
-      display: flex;
-      flex-direction: column;
-
-    }
-
 
     .brand-title {
-
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 600;
-
       line-height: 1.2;
-
     }
 
-
     .brand-subtitle {
+      margin-top: 3px;
 
-      margin-top: 2px;
+      font-size: 9px;
 
-      font-size: 10px;
+      letter-spacing: 0.8px;
 
       opacity: 0.65;
 
-      letter-spacing: 0.6px;
-
       text-transform: uppercase;
-
     }
 
-
-    .library-label {
-
+    .reader-label {
       display: flex;
       align-items: center;
-
       gap: 8px;
 
       font-size: 12px;
 
       color:
-        rgba(255,255,255,0.75);
-
+        rgba(255,255,255,0.76);
     }
 
-
-    .library-dot {
-
+    .reader-dot {
       width: 7px;
       height: 7px;
 
       border-radius: 50%;
 
-      background: #67c7ec;
+      background: #65c7ed;
 
       box-shadow:
-        0 0 0 5px rgba(103,199,236,0.12);
-
+        0 0 0 5px rgba(101,199,237,0.12);
     }
 
 
-    /*
-    =========================================================
-    BOOK INFORMATION
-    =========================================================
-    */
+    /* =========================
+       BOOK INFO
+       ========================= */
 
     .book-info {
-
-      flex-shrink: 0;
-
-      min-height: 87px;
-
-      padding:
-        14px 24px 10px;
+      padding: 24px 20px 16px;
 
       text-align: center;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-
-      position: relative;
-
-      z-index: 10;
-
     }
-
 
     .book-meta {
-
       display: flex;
       align-items: center;
       justify-content: center;
 
-      gap: 8px;
+      gap: 9px;
 
-      margin-bottom: 4px;
-
+      margin-bottom: 7px;
     }
 
-
     .category-pill {
+      padding: 5px 12px;
 
-      display: inline-flex;
-      align-items: center;
-
-      min-height: 23px;
-
-      padding:
-        4px 10px;
+      border-radius: 999px;
 
       background:
         rgba(45,153,201,0.10);
 
-      color: var(--ijn-blue);
-
       border:
-        1px solid rgba(45,153,201,0.16);
+        1px solid rgba(45,153,201,0.18);
 
-      border-radius: 999px;
+      color: var(--ijn-blue);
 
       font-size: 9px;
       font-weight: 600;
 
-      letter-spacing: 0.6px;
-
       text-transform: uppercase;
 
+      letter-spacing: 0.5px;
     }
-
 
     #book-subtitle {
-
       font-size: 11px;
-
-      color: var(--muted);
-
       font-weight: 500;
 
+      color: var(--muted);
     }
 
-
-    .book-info h1 {
-
+    #book-title {
       margin: 0;
 
       font-size:
-        clamp(20px, 2vw, 28px);
+        clamp(22px, 2.2vw, 32px);
 
       line-height: 1.25;
 
-      font-weight: 600;
-
-      letter-spacing: -0.5px;
-
-      color: var(--ijn-navy);
-
+      letter-spacing: -0.6px;
     }
 
-
     #status {
-
-      margin-top: 5px;
+      margin-top: 7px;
 
       font-size: 10px;
 
       color: #82909b;
-
     }
 
 
-    /*
-    =========================================================
-    READER AREA
-    =========================================================
-    */
+    /* =========================
+       BOOK READING AREA
+       ========================= */
 
-    .reader-workspace {
-
-      flex: 1;
-
-      min-height: 0;
+    .reader-area {
+      position: relative;
 
       width: 100%;
 
-      position: relative;
+      padding:
+        32px 70px 50px;
+
+      display: flex;
+      justify-content: center;
+    }
+
+    .reading-surface {
+      width: min(1350px, 92vw);
+
+      min-height: 620px;
+
+      padding:
+        48px 50px;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
-      overflow: hidden;
+      position: relative;
 
-      padding:
-        8px 55px 12px;
-
-    }
-
-
-    /*
-    Frosted library reading panel
-    */
-
-    .reader-workspace::before {
-
-      content: "";
-
-      position: absolute;
-
-      width: min(1200px, 82vw);
-
-      height: 76%;
-
-      left: 50%;
-      top: 50%;
-
-      transform:
-        translate(-50%, -50%);
+      border-radius: 28px;
 
       background:
-        rgba(255,255,255,0.42);
+        rgba(255,255,255,0.58);
 
       border:
-        1px solid rgba(255,255,255,0.8);
-
-      border-radius: 30px;
+        1px solid rgba(255,255,255,0.9);
 
       box-shadow:
-        0 30px 70px rgba(0,49,83,0.07),
-        inset 0 1px 0 rgba(255,255,255,0.9);
-
-      backdrop-filter:
-        blur(8px);
-
-      pointer-events: none;
-
+        0 30px 75px rgba(0,49,83,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
-
-    /*
-    soft book shadow underneath
-    */
-
-    .reader-workspace::after {
-
+    .reading-surface::after {
       content: "";
 
       position: absolute;
 
-      width: min(900px, 65vw);
-
+      width: 65%;
       height: 40px;
 
+      bottom: 30px;
       left: 50%;
-      bottom: 8%;
 
-      transform:
-        translateX(-50%);
+      transform: translateX(-50%);
 
       border-radius: 50%;
 
@@ -452,111 +275,54 @@
       filter: blur(25px);
 
       pointer-events: none;
-
     }
 
-
-    /*
-    This stage now matches the exact
-    frosted panel dimensions.
-    */
-
     .book-stage {
-
-      width: min(1200px, 82vw);
-      height: 76%;
-
       position: relative;
-
       z-index: 5;
+
+      width: 100%;
 
       display: flex;
       align-items: center;
       justify-content: center;
-
-      margin: auto;
-
     }
-
 
     #book {
-
       margin: 0 auto;
-
     }
 
 
-    /*
-    =========================================================
-    PAGES
-    =========================================================
-    */
+    /* =========================
+       PAGEFLIP
+       ========================= */
 
     .page {
-
       background: white;
-
       overflow: hidden;
-
-      box-shadow:
-        0 12px 35px rgba(0,49,83,0.13);
-
     }
-
 
     .page canvas {
-
       width: 100%;
       height: 100%;
-
       display: block;
-
     }
 
-
-    /*
-    PageFlip generated wrapper.
-    Force true center alignment.
-    */
-
     .stf__parent {
-
       margin: 0 auto !important;
-
-      position: relative !important;
-
-      top: 0 !important;
-
-      transform-origin:
-        center center !important;
 
       filter:
         drop-shadow(
-          0 18px 22px rgba(0,49,83,0.12)
+          0 18px 24px rgba(0,49,83,0.15)
         );
-
     }
 
 
-    .stf__wrapper {
+    /* =========================
+       SIDE ARROWS
+       ========================= */
 
-      display: flex !important;
-
-      align-items: center !important;
-
-      justify-content: center !important;
-
-    }
-
-
-    /*
-    =========================================================
-    SIDE PAGE TURN HINTS
-    =========================================================
-    */
-
-    .turn-hint {
-
+    .side-arrow {
       position: absolute;
 
       top: 50%;
@@ -564,74 +330,63 @@
       transform:
         translateY(-50%);
 
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
+
+      border: 1px solid var(--border);
 
       border-radius: 50%;
 
       background:
-        rgba(255,255,255,0.86);
-
-      border:
-        1px solid var(--border);
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        rgba(255,255,255,0.95);
 
       color: var(--ijn-navy);
 
-      font-size: 21px;
+      font-size: 22px;
 
       cursor: pointer;
 
+      box-shadow:
+        0 8px 24px rgba(0,49,83,0.10);
+
       z-index: 20;
 
-      box-shadow:
-        0 8px 24px rgba(0,49,83,0.09);
-
-      backdrop-filter:
-        blur(10px);
-
       transition:
-        transform 0.2s ease,
-        background 0.2s ease;
-
+        transform .2s ease,
+        box-shadow .2s ease;
     }
 
-
-    .turn-hint:hover {
-
-      background: white;
-
+    .side-arrow:hover {
       transform:
         translateY(-50%)
-        scale(1.07);
+        scale(1.06);
 
+      box-shadow:
+        0 10px 28px rgba(0,49,83,0.14);
+    }
+
+    .side-arrow.prev {
+      left: 18px;
+    }
+
+    .side-arrow.next {
+      right: 18px;
     }
 
 
-    .turn-hint.left {
-      left: 20px;
-    }
-
-
-    .turn-hint.right {
-      right: 20px;
-    }
-
-
-    /*
-    =========================================================
-    TOOLBAR
-    =========================================================
-    */
+    /* =========================
+       TOOLBAR
+       ========================= */
 
     .reader-toolbar {
+      position: sticky;
 
-      height: 68px;
+      bottom: 0;
 
-      flex-shrink: 0;
+      min-height: 70px;
+
+      padding:
+        13px 30px;
 
       display: grid;
 
@@ -640,51 +395,38 @@
 
       align-items: center;
 
-      padding:
-        0 30px;
-
       background:
-        rgba(255,255,255,0.94);
+        rgba(255,255,255,0.95);
+
+      backdrop-filter:
+        blur(14px);
 
       border-top:
         1px solid var(--border);
 
       box-shadow:
-        0 -8px 30px
-        rgba(0,49,83,0.06);
-
-      backdrop-filter:
-        blur(16px);
+        0 -8px 30px rgba(0,49,83,0.06);
 
       z-index: 100;
-
     }
 
-
-    .toolbar-section {
-
+    .toolbar-side {
       display: flex;
       align-items: center;
-
-      gap: 8px;
-
     }
 
-
-    .toolbar-section.right {
+    .toolbar-side.right {
       justify-content: flex-end;
     }
 
-
     .toolbar-button {
-
-      height: 38px;
+      min-height: 40px;
 
       padding:
-        0 14px;
+        0 15px;
 
       border:
-        1px solid rgba(0,49,83,0.09);
+        1px solid rgba(0,49,83,0.11);
 
       border-radius: 10px;
 
@@ -696,426 +438,242 @@
       font-weight: 500;
 
       cursor: pointer;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      gap: 7px;
-
-      transition:
-        background 0.18s ease,
-        transform 0.18s ease,
-        box-shadow 0.18s ease;
-
     }
-
 
     .toolbar-button:hover {
-
-      background: #f5f9fc;
-
-      box-shadow:
-        0 5px 14px rgba(0,49,83,0.08);
-
-      transform:
-        translateY(-1px);
-
+      background: #f6fafc;
     }
 
-
-    .nav-button {
-
-      width: 38px;
-
-      padding: 0;
-
-      font-size: 17px;
-
-    }
-
-
-    .page-navigation {
-
+    .page-control {
       display: flex;
       flex-direction: column;
       align-items: center;
-
-      min-width: 210px;
-
     }
 
-
-    .page-navigation-row {
-
+    .page-control-row {
       display: flex;
       align-items: center;
-
-      gap: 10px;
-
+      gap: 12px;
     }
 
+    .nav-button {
+      width: 40px;
+      height: 40px;
+
+      padding: 0;
+
+      font-size: 18px;
+    }
 
     #page-counter {
-
-      min-width: 74px;
+      min-width: 84px;
 
       text-align: center;
 
       font-size: 12px;
-
       font-weight: 600;
-
-      color: var(--ijn-navy);
-
     }
 
-
     .progress-track {
-
-      width: 180px;
+      width: 190px;
       height: 3px;
 
-      margin-top: 7px;
+      margin-top: 8px;
 
       overflow: hidden;
 
       border-radius: 20px;
 
-      background:
-        #dde7ed;
-
+      background: #dce7ed;
     }
 
-
     #progress-bar {
-
       width: 0%;
       height: 100%;
+
+      border-radius: inherit;
 
       background:
         linear-gradient(
           90deg,
           #2D99C9,
-          #65c3e8
+          #64c8ed
         );
 
-      border-radius: inherit;
-
       transition:
-        width 0.3s ease;
-
+        width .3s ease;
     }
-
-
-    /*
-    =========================================================
-    LOADING
-    =========================================================
-    */
-
-    .loading-spinner {
-
-      display: inline-block;
-
-      width: 11px;
-      height: 11px;
-
-      margin-right: 6px;
-
-      border:
-        2px solid rgba(0,49,83,0.12);
-
-      border-top-color:
-        var(--ijn-blue);
-
-      border-radius: 50%;
-
-      animation:
-        spin 0.8s linear infinite;
-
-    }
-
-
-    @keyframes spin {
-
-      to {
-        transform:
-          rotate(360deg);
-      }
-
-    }
-
 
     .error {
-
       color: #b00020;
-
       font-weight: 500;
-
     }
 
 
-    /*
-    =========================================================
-    MOBILE
-    =========================================================
-    */
+    /* =========================
+       MOBILE
+       ========================= */
 
-    @media
-    (max-width: 700px) {
-
+    @media (max-width: 700px) {
 
       .reader-header {
-
-        height: 60px;
+        min-height: 64px;
 
         padding:
-          0 16px;
-
+          12px 16px;
       }
 
+      .reader-label {
+        display: none;
+      }
 
       .brand-icon {
-
-        width: 34px;
-        height: 34px;
-
-        border-radius: 9px;
-
+        width: 36px;
+        height: 36px;
       }
-
 
       .brand-title {
-        font-size: 14px;
+        font-size: 15px;
       }
-
 
       .brand-subtitle {
         font-size: 8px;
       }
 
-
-      .library-label {
-        display: none;
-      }
-
-
       .book-info {
+        padding:
+          18px 14px 10px;
+      }
 
-        min-height: 78px;
+      #book-title {
+        font-size: 20px;
+      }
+
+      .reader-area {
+        padding:
+          20px 10px 35px;
+      }
+
+      .reading-surface {
+        width: 100%;
+
+        min-height: 520px;
 
         padding:
-          10px 14px 6px;
-
-      }
-
-
-      .book-info h1 {
-
-        font-size: 18px;
-
-      }
-
-
-      #status {
-        font-size: 9px;
-      }
-
-
-      .reader-workspace {
-
-        padding:
-          5px 8px;
-
-      }
-
-
-      .reader-workspace::before {
-
-        width: 96vw;
-        height: 92%;
+          30px 10px;
 
         border-radius: 20px;
-
       }
 
-
-      .reader-workspace::after {
+      .side-arrow {
         display: none;
       }
-
-
-      .book-stage {
-
-        width: 96vw;
-        height: 92%;
-
-      }
-
-
-      .turn-hint {
-        display: none;
-      }
-
 
       .reader-toolbar {
-
-        height: 62px;
-
-        padding:
-          0 12px;
-
         grid-template-columns:
           auto 1fr auto;
 
+        padding:
+          10px 12px;
       }
 
-
-      .toolbar-button .button-label {
+      .toolbar-button .label {
         display: none;
       }
 
-
       .toolbar-button {
-
-        width: 38px;
-        height: 38px;
-
+        width: 40px;
         padding: 0;
-
       }
-
-
-      .page-navigation {
-
-        min-width: unset;
-
-        width: 100%;
-
-      }
-
 
       .progress-track {
-
         width: 110px;
-
       }
-
-
-      #page-counter {
-
-        min-width: 64px;
-
-        font-size: 11px;
-
-      }
-
 
     }
-
 
   </style>
 
 </head>
 
-
 <body>
 
 
-<div class="reader-app">
+<header class="reader-header">
 
+  <div class="brand">
 
-  <!-- HEADER -->
+    <div class="brand-icon">
+      IJN
+    </div>
 
-  <header class="reader-header">
-
-
-    <div class="brand">
-
-      <div class="brand-icon">
-        IJN
+    <div>
+      <div class="brand-title">
+        Digital Library
       </div>
 
-
-      <div class="brand-text">
-
-        <div class="brand-title">
-          Digital Library
-        </div>
-
-        <div class="brand-subtitle">
-          Institut Jantung Negara
-        </div>
-
+      <div class="brand-subtitle">
+        Institut Jantung Negara
       </div>
-
     </div>
 
-
-    <div class="library-label">
-
-      <span class="library-dot"></span>
-
-      Interactive Publication Reader
-
-    </div>
+  </div>
 
 
-  </header>
+  <div class="reader-label">
 
+    <span class="reader-dot"></span>
 
+    Interactive Publication Reader
 
-  <!-- BOOK INFO -->
+  </div>
 
-  <section class="book-info">
-
-
-    <div class="book-meta">
-
-      <span
-        class="category-pill"
-        id="category-label"
-      >
-        Publication
-      </span>
-
-      <span id="book-subtitle"></span>
-
-    </div>
-
-
-    <h1 id="book-title">
-      Loading publication...
-    </h1>
-
-
-    <div id="status">
-
-      <span class="loading-spinner"></span>
-
-      Preparing publication...
-
-    </div>
-
-
-  </section>
+</header>
 
 
 
-  <!-- WORKSPACE -->
+<section class="book-info">
 
-  <main class="reader-workspace">
+  <div class="book-meta">
 
-
-    <button
-      class="turn-hint left"
-      id="side-prev"
-      aria-label="Previous page"
+    <span
+      class="category-pill"
+      id="category-label"
     >
-      ‹
-    </button>
+      Publication
+    </span>
 
+    <span id="book-subtitle"></span>
+
+  </div>
+
+
+  <h1 id="book-title">
+    Loading publication...
+  </h1>
+
+
+  <div id="status">
+    Preparing publication...
+  </div>
+
+</section>
+
+
+
+<section class="reader-area">
+
+
+  <button
+    class="side-arrow prev"
+    id="side-prev"
+    aria-label="Previous page"
+  >
+    ‹
+  </button>
+
+
+  <div class="reading-surface">
 
     <div class="book-stage">
 
@@ -1123,130 +681,105 @@
 
     </div>
 
+  </div>
+
+
+  <button
+    class="side-arrow next"
+    id="side-next"
+    aria-label="Next page"
+  >
+    ›
+  </button>
+
+
+</section>
+
+
+
+<footer class="reader-toolbar">
+
+
+  <div class="toolbar-side">
 
     <button
-      class="turn-hint right"
-      id="side-next"
-      aria-label="Next page"
+      class="toolbar-button"
+      id="download-btn"
     >
-      ›
+      ↓
+      <span class="label">
+        Download PDF
+      </span>
     </button>
 
-
-  </main>
-
+  </div>
 
 
-  <!-- TOOLBAR -->
 
-  <footer class="reader-toolbar">
+  <div class="page-control">
 
 
-    <div class="toolbar-section">
-
+    <div class="page-control-row">
 
       <button
-        class="toolbar-button"
-        id="download-btn"
+        class="toolbar-button nav-button"
+        id="prev-btn"
       >
-
-        <span>
-          ↓
-        </span>
-
-        <span class="button-label">
-          Download PDF
-        </span>
-
+        ‹
       </button>
 
 
-    </div>
-
-
-
-    <div class="page-navigation">
-
-
-      <div class="page-navigation-row">
-
-
-        <button
-          class="toolbar-button nav-button"
-          id="prev-btn"
-          aria-label="Previous page"
-        >
-          ‹
-        </button>
-
-
-        <div id="page-counter">
-          1 / 1
-        </div>
-
-
-        <button
-          class="toolbar-button nav-button"
-          id="next-btn"
-          aria-label="Next page"
-        >
-          ›
-        </button>
-
-
+      <div id="page-counter">
+        1 / 1
       </div>
-
-
-      <div class="progress-track">
-
-        <div id="progress-bar"></div>
-
-      </div>
-
-
-    </div>
-
-
-
-    <div class="toolbar-section right">
 
 
       <button
-        class="toolbar-button"
-        id="fullscreen-btn"
+        class="toolbar-button nav-button"
+        id="next-btn"
       >
-
-        <span>
-          ⛶
-        </span>
-
-        <span class="button-label">
-          Fullscreen
-        </span>
-
+        ›
       </button>
-
 
     </div>
 
 
-  </footer>
+    <div class="progress-track">
+
+      <div id="progress-bar"></div>
+
+    </div>
 
 
-</div>
+  </div>
 
 
 
-<!-- PAGE FLIP -->
+  <div class="toolbar-side right">
+
+    <button
+      class="toolbar-button"
+      id="fullscreen-btn"
+    >
+      ⛶
+      <span class="label">
+        Fullscreen
+      </span>
+    </button>
+
+  </div>
+
+
+</footer>
+
+
 
 <script
   src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js">
 </script>
 
 
-
 <script type="module">
-
 
   import * as pdfjsLib from
     "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.mjs";
@@ -1256,9 +789,7 @@
     "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.worker.mjs";
 
 
-
   async function loadBook() {
-
 
     const params =
       new URLSearchParams(
@@ -1271,7 +802,9 @@
 
 
     const status =
-      document.getElementById("status");
+      document.getElementById(
+        "status"
+      );
 
 
     const titleElement =
@@ -1310,22 +843,17 @@
       );
 
 
-
     if (!bookId) {
-
 
       titleElement.textContent =
         "No publication selected";
 
-
       status.innerHTML =
         '<span class="error">Please use a valid publication link.</span>';
-
 
       return;
 
     }
-
 
 
     try {
@@ -1354,22 +882,17 @@
         books[bookId];
 
 
-
       if (!book) {
-
 
         titleElement.textContent =
           "Publication not found";
 
-
         status.innerHTML =
           '<span class="error">This publication does not exist.</span>';
-
 
         return;
 
       }
-
 
 
       titleElement.textContent =
@@ -1382,14 +905,13 @@
 
       if (book.category) {
 
-
         categoryLabel.textContent =
-          book.category
-            .replaceAll("-", " ");
-
+          book.category.replaceAll(
+            "-",
+            " "
+          );
 
       }
-
 
 
       if (!book.pdf) {
@@ -1401,7 +923,6 @@
       }
 
 
-
       const pdfUrl =
         new URL(
           book.pdf,
@@ -1409,107 +930,61 @@
         ).href;
 
 
-
-      status.innerHTML =
-        '<span class="loading-spinner"></span> Loading publication...';
-
+      status.textContent =
+        "Loading publication...";
 
 
       const pdf =
-        await pdfjsLib
-          .getDocument({
-            url: pdfUrl
-          })
-          .promise;
+        await pdfjsLib.getDocument({
+          url: pdfUrl
+        }).promise;
 
 
-
-      status.innerHTML =
-        '<span class="loading-spinner"></span> Preparing pages...';
-
+      status.textContent =
+        `Preparing ${pdf.numPages} pages...`;
 
 
       const firstPage =
         await pdf.getPage(1);
 
 
-      const naturalViewport =
+      const baseViewport =
         firstPage.getViewport({
           scale: 1
         });
 
 
-      const pdfRatio =
-        naturalViewport.height /
-        naturalViewport.width;
+      /*
+      NORMAL FIXED DISPLAY SIZE
+
+      No viewport fitting.
+      No dynamic height calculations.
+
+      PageFlip will display the book
+      at this normal size.
+      */
 
 
+      const pageWidth = 430;
 
-      const workspace =
-        document.querySelector(
-          ".reader-workspace"
+
+      const pageHeight =
+        pageWidth *
+        (
+          baseViewport.height /
+          baseViewport.width
         );
-
-
-      const availableHeight =
-        workspace.clientHeight - 24;
-
-
-      const availableWidth =
-        workspace.clientWidth - 130;
-
-
-
-      const maxPageWidthFromScreen =
-        availableWidth / 2;
-
-
-      const maxPageWidthFromHeight =
-        availableHeight / pdfRatio;
-
-
-
-      let desiredPageWidth =
-        Math.min(
-          maxPageWidthFromScreen,
-          maxPageWidthFromHeight
-        );
-
 
 
       /*
-      Slightly larger than previous version,
-      but still safely fitted.
+      RENDER ALL PDF PAGES
       */
-
-      desiredPageWidth *= 0.94;
-
-
-
-      desiredPageWidth =
-        Math.max(
-          250,
-          Math.min(
-            desiredPageWidth,
-            620
-          )
-        );
-
-
-      const desiredPageHeight =
-        desiredPageWidth *
-        pdfRatio;
-
 
 
       for (
-
         let pageNumber = 1;
-
         pageNumber <= pdf.numPages;
-
         pageNumber++
-
       ) {
 
 
@@ -1519,12 +994,16 @@
           );
 
 
+        /*
+        Higher rendering resolution
+        keeps text reasonably sharp.
+        */
+
 
         const renderViewport =
           page.getViewport({
-            scale: 1.5
+            scale: 1.6
           });
-
 
 
         const pageElement =
@@ -1537,22 +1016,15 @@
           "page";
 
 
-
         if (
-
           pageNumber === 1 ||
-
           pageNumber === pdf.numPages
-
         ) {
-
 
           pageElement.dataset.density =
             "hard";
 
-
         }
-
 
 
         const canvas =
@@ -1567,7 +1039,6 @@
           );
 
 
-
         canvas.width =
           Math.floor(
             renderViewport.width
@@ -1580,7 +1051,6 @@
           );
 
 
-
         pageElement.appendChild(
           canvas
         );
@@ -1589,7 +1059,6 @@
         bookContainer.appendChild(
           pageElement
         );
-
 
 
         await page.render({
@@ -1606,6 +1075,10 @@
       }
 
 
+      /*
+      CREATE FLIPBOOK
+      */
+
 
       const pageFlip =
         new St.PageFlip(
@@ -1614,51 +1087,39 @@
 
           {
 
-
             width:
-              desiredPageWidth,
-
+              pageWidth,
 
             height:
-              desiredPageHeight,
-
+              pageHeight,
 
             size:
               "fixed",
 
-
             showCover:
               true,
-
 
             usePortrait:
               true,
 
-
             drawShadow:
               true,
-
 
             maxShadowOpacity:
               0.35,
 
-
             flippingTime:
               750,
-
 
             mobileScrollSupport:
               false,
 
-
             autoSize:
               true
-
 
           }
 
         );
-
 
 
       pageFlip.loadFromHTML(
@@ -1668,7 +1129,6 @@
         )
 
       );
-
 
 
       function updatePageCounter(
@@ -1684,7 +1144,6 @@
           `${currentPage} / ${pdf.numPages}`;
 
 
-
         const progress =
           (
             currentPage /
@@ -1695,13 +1154,10 @@
         progressBar.style.width =
           `${progress}%`;
 
-
       }
 
 
-
       updatePageCounter(0);
-
 
 
       pageFlip.on(
@@ -1716,20 +1172,14 @@
       );
 
 
-
       function previousPage() {
-
         pageFlip.flipPrev();
-
       }
 
 
       function nextPage() {
-
         pageFlip.flipNext();
-
       }
-
 
 
       document
@@ -1772,7 +1222,6 @@
         );
 
 
-
       document
         .getElementById(
           "download-btn"
@@ -1790,7 +1239,6 @@
         );
 
 
-
       document
         .getElementById(
           "fullscreen-btn"
@@ -1799,50 +1247,30 @@
           "click",
           async () => {
 
-
             if (
               !document.fullscreenElement
             ) {
-
 
               await document
                 .documentElement
                 .requestFullscreen();
 
-
             }
 
             else {
 
-
               await document
                 .exitFullscreen();
 
-
             }
-
 
           }
         );
 
 
-
       document.addEventListener(
-
         "keydown",
-
         event => {
-
-
-          if (
-            event.key ===
-            "ArrowRight"
-          ) {
-
-            nextPage();
-
-          }
-
 
           if (
             event.key ===
@@ -1854,10 +1282,17 @@
           }
 
 
+          if (
+            event.key ===
+            "ArrowRight"
+          ) {
+
+            nextPage();
+
+          }
+
         }
-
       );
-
 
 
       status.textContent =
@@ -1879,20 +1314,15 @@
       status.innerHTML =
         '<span class="error">Unable to create flipbook.</span>';
 
-
     }
-
 
   }
 
 
-
   loadBook();
-
 
 </script>
 
 
 </body>
-
 </html>
