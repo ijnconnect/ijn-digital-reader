@@ -7,62 +7,108 @@
   <title>IJN Digital Reader</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f7f9;
+      background: #eef2f5;
       color: #003153;
     }
 
     .reader-header {
       background: #003153;
       color: white;
-      padding: 18px 24px;
+      padding: 18px 30px;
     }
 
     .reader-header h1 {
       margin: 0;
-      font-size: 22px;
+      font-size: 24px;
     }
 
     .reader-header p {
-      margin: 5px 0 0;
+      margin: 6px 0 0;
       opacity: 0.8;
     }
 
-    .reader-container {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 20px;
+    .book-info {
       text-align: center;
+      padding: 28px 20px 15px;
     }
 
-    #book-title {
-      margin-bottom: 10px;
+    .book-info h2 {
+      margin: 0 0 8px;
+      font-size: 30px;
     }
 
-    #book-subtitle {
-      color: #666;
-      margin-bottom: 30px;
+    .book-info p {
+      margin: 0;
+      color: #66717d;
+      font-size: 18px;
     }
 
     #status {
-      margin: 30px 0;
+      text-align: center;
+      margin: 20px;
       font-size: 16px;
     }
 
-    .pdf-link {
-      display: inline-block;
-      padding: 12px 20px;
-      background: #2D99C9;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      margin-top: 15px;
+    #pdf-pages {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      padding: 20px;
     }
 
-    .pdf-link:hover {
-      opacity: 0.9;
+    .pdf-page {
+      background: white;
+      box-shadow: 0 8px 25px rgba(0, 49, 83, 0.12);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 100%;
+    }
+
+    .pdf-page canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page-number {
+      text-align: center;
+      padding: 10px;
+      color: #65727c;
+      font-size: 13px;
+      background: white;
+    }
+
+    .error {
+      color: #b00020;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+
+      .reader-header {
+        padding: 15px 18px;
+      }
+
+      .reader-header h1 {
+        font-size: 20px;
+      }
+
+      .book-info h2 {
+        font-size: 24px;
+      }
+
+      #pdf-pages {
+        padding: 10px;
+        gap: 18px;
+      }
     }
   </style>
 </head>
@@ -74,29 +120,26 @@
     <p>Institut Jantung Negara</p>
   </header>
 
-  <main class="reader-container">
+  <section class="book-info">
+    <h2 id="book-title">Loading publication...</h2>
+    <p id="book-subtitle"></p>
+  </section>
 
-    <h2 id="book-title">Loading book...</h2>
+  <div id="status">
+    Preparing publication...
+  </div>
 
-    <div id="book-subtitle"></div>
+  <main id="pdf-pages"></main>
 
-    <div id="status">
-      Please wait while the publication is loaded.
-    </div>
 
-    <a
-      id="pdf-link"
-      class="pdf-link"
-      href="#"
-      target="_blank"
-      style="display:none;"
-    >
-      Open PDF
-    </a>
+  <script type="module">
 
-  </main>
+    import * as pdfjsLib from
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.mjs";
 
-  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.worker.mjs";
+
 
     async function loadBook() {
 
@@ -104,35 +147,54 @@
 
       const bookId = params.get("book");
 
+      const status = document.getElementById("status");
+      const pagesContainer = document.getElementById("pdf-pages");
+
       if (!bookId) {
 
         document.getElementById("book-title").textContent =
           "No publication selected";
 
-        document.getElementById("status").textContent =
-          "Please open this page using a valid book link.";
+        status.innerHTML =
+          '<span class="error">Please use a valid publication link.</span>';
 
         return;
       }
 
+
       try {
 
-        const response = await fetch("library/books.json");
+        /*
+        -------------------------
+        GET BOOK INFORMATION
+        -------------------------
+        */
 
-        const books = await response.json();
+        const response =
+          await fetch("library/books.json");
 
-        const book = books[bookId];
+        if (!response.ok) {
+          throw new Error("Unable to load books.json");
+        }
+
+        const books =
+          await response.json();
+
+        const book =
+          books[bookId];
+
 
         if (!book) {
 
           document.getElementById("book-title").textContent =
             "Publication not found";
 
-          document.getElementById("status").textContent =
-            "The requested publication could not be found.";
+          status.innerHTML =
+            '<span class="error">This publication does not exist in the digital library.</span>';
 
           return;
         }
+
 
         document.getElementById("book-title").textContent =
           book.title;
@@ -140,16 +202,119 @@
         document.getElementById("book-subtitle").textContent =
           book.subtitle || "";
 
-        document.getElementById("status").textContent =
-          "Publication loaded successfully.";
 
-        const pdfLink =
-          document.getElementById("pdf-link");
+        status.textContent =
+          "Loading PDF...";
 
-        pdfLink.href = book.pdf;
 
-        pdfLink.style.display =
-          "inline-block";
+        /*
+        -------------------------
+        LOAD PDF
+        -------------------------
+        */
+
+        const pdf =
+          await pdfjsLib.getDocument(book.pdf).promise;
+
+
+        status.textContent =
+          `Rendering ${pdf.numPages} pages...`;
+
+
+        /*
+        -------------------------
+        RENDER EVERY PAGE
+        -------------------------
+        */
+
+        for (
+          let pageNumber = 1;
+          pageNumber <= pdf.numPages;
+          pageNumber++
+        ) {
+
+          const page =
+            await pdf.getPage(pageNumber);
+
+
+          /*
+          Higher number = sharper PDF,
+          but also heavier browser workload.
+          */
+
+          const scale = 1.5;
+
+          const viewport =
+            page.getViewport({ scale });
+
+
+          /*
+          PAGE WRAPPER
+          */
+
+          const pageWrapper =
+            document.createElement("div");
+
+          pageWrapper.className =
+            "pdf-page";
+
+
+          /*
+          CANVAS
+          */
+
+          const canvas =
+            document.createElement("canvas");
+
+          const context =
+            canvas.getContext("2d");
+
+          canvas.width =
+            viewport.width;
+
+          canvas.height =
+            viewport.height;
+
+
+          pageWrapper.appendChild(canvas);
+
+
+          /*
+          PAGE NUMBER
+          */
+
+          const pageLabel =
+            document.createElement("div");
+
+          pageLabel.className =
+            "page-number";
+
+          pageLabel.textContent =
+            `Page ${pageNumber} of ${pdf.numPages}`;
+
+
+          pageWrapper.appendChild(pageLabel);
+
+          pagesContainer.appendChild(pageWrapper);
+
+
+          /*
+          RENDER PDF PAGE
+          */
+
+          await page.render({
+
+            canvasContext: context,
+            viewport: viewport
+
+          }).promise;
+
+        }
+
+
+        status.textContent =
+          `${pdf.numPages} pages loaded successfully.`;
+
 
       }
 
@@ -157,15 +322,13 @@
 
         console.error(error);
 
-        document.getElementById("book-title").textContent =
-          "Unable to load publication";
-
-        document.getElementById("status").textContent =
-          "There was a problem loading the digital library.";
+        status.innerHTML =
+          '<span class="error">Unable to load the PDF. Please check the browser console.</span>';
 
       }
 
     }
+
 
     loadBook();
 
