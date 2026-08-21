@@ -36,12 +36,14 @@
 
     body {
       font-family: "Poppins", sans-serif;
+
       background:
         linear-gradient(
           180deg,
           #f8fbfd 0%,
           #eef3f7 100%
         );
+
       color: var(--ijn-navy);
     }
 
@@ -55,8 +57,10 @@
        ========================= */
 
     .reader-header {
-      min-height: 78px;
-      padding: 15px 34px;
+      min-height: 82px;
+
+      padding:
+        13px 34px;
 
       display: flex;
       align-items: center;
@@ -75,37 +79,51 @@
         0 4px 20px rgba(0,49,83,0.12);
     }
 
+
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+
+      gap: 16px;
     }
 
-    .brand-icon {
-      width: 42px;
-      height: 42px;
+
+    .brand-logo {
+      width: 56px;
+      height: 56px;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
-      border-radius: 11px;
-
-      background:
-        rgba(255,255,255,0.12);
-
-      border:
-        1px solid rgba(255,255,255,0.15);
-
-      font-size: 14px;
-      font-weight: 700;
+      flex-shrink: 0;
     }
+
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: contain;
+
+      display: block;
+    }
+
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
 
     .brand-title {
       font-size: 18px;
       font-weight: 600;
+
       line-height: 1.2;
     }
+
 
     .brand-subtitle {
       margin-top: 3px;
@@ -119,9 +137,11 @@
       text-transform: uppercase;
     }
 
+
     .reader-label {
       display: flex;
       align-items: center;
+
       gap: 8px;
 
       font-size: 12px;
@@ -129,6 +149,7 @@
       color:
         rgba(255,255,255,0.76);
     }
+
 
     .reader-dot {
       width: 7px;
@@ -148,10 +169,12 @@
        ========================= */
 
     .book-info {
-      padding: 24px 20px 16px;
+      padding:
+        24px 20px 16px;
 
       text-align: center;
     }
+
 
     .book-meta {
       display: flex;
@@ -163,8 +186,10 @@
       margin-bottom: 7px;
     }
 
+
     .category-pill {
-      padding: 5px 12px;
+      padding:
+        5px 12px;
 
       border-radius: 999px;
 
@@ -184,12 +209,14 @@
       letter-spacing: 0.5px;
     }
 
+
     #book-subtitle {
       font-size: 11px;
       font-weight: 500;
 
       color: var(--muted);
     }
+
 
     #book-title {
       margin: 0;
@@ -202,6 +229,7 @@
       letter-spacing: -0.6px;
     }
 
+
     #status {
       margin-top: 7px;
 
@@ -212,7 +240,7 @@
 
 
     /* =========================
-       BOOK READING AREA
+       READER AREA
        ========================= */
 
     .reader-area {
@@ -226,6 +254,7 @@
       display: flex;
       justify-content: center;
     }
+
 
     .reading-surface {
       width: min(1350px, 92vw);
@@ -254,6 +283,7 @@
         inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
+
     .reading-surface::after {
       content: "";
 
@@ -265,7 +295,8 @@
       bottom: 30px;
       left: 50%;
 
-      transform: translateX(-50%);
+      transform:
+        translateX(-50%);
 
       border-radius: 50%;
 
@@ -277,6 +308,7 @@
       pointer-events: none;
     }
 
+
     .book-stage {
       position: relative;
       z-index: 5;
@@ -287,6 +319,7 @@
       align-items: center;
       justify-content: center;
     }
+
 
     #book {
       margin: 0 auto;
@@ -302,14 +335,18 @@
       overflow: hidden;
     }
 
+
     .page canvas {
       width: 100%;
       height: 100%;
+
       display: block;
     }
 
+
     .stf__parent {
-      margin: 0 auto !important;
+      margin:
+        0 auto !important;
 
       filter:
         drop-shadow(
@@ -333,14 +370,16 @@
       width: 46px;
       height: 46px;
 
-      border: 1px solid var(--border);
+      border:
+        1px solid var(--border);
 
       border-radius: 50%;
 
       background:
         rgba(255,255,255,0.95);
 
-      color: var(--ijn-navy);
+      color:
+        var(--ijn-navy);
 
       font-size: 22px;
 
@@ -356,6 +395,7 @@
         box-shadow .2s ease;
     }
 
+
     .side-arrow:hover {
       transform:
         translateY(-50%)
@@ -365,9 +405,11 @@
         0 10px 28px rgba(0,49,83,0.14);
     }
 
+
     .side-arrow.prev {
       left: 18px;
     }
+
 
     .side-arrow.next {
       right: 18px;
@@ -410,14 +452,17 @@
       z-index: 100;
     }
 
+
     .toolbar-side {
       display: flex;
       align-items: center;
     }
 
+
     .toolbar-side.right {
       justify-content: flex-end;
     }
+
 
     .toolbar-button {
       min-height: 40px;
@@ -440,9 +485,11 @@
       cursor: pointer;
     }
 
+
     .toolbar-button:hover {
       background: #f6fafc;
     }
+
 
     .page-control {
       display: flex;
@@ -450,11 +497,14 @@
       align-items: center;
     }
 
+
     .page-control-row {
       display: flex;
       align-items: center;
+
       gap: 12px;
     }
+
 
     .nav-button {
       width: 40px;
@@ -465,6 +515,7 @@
       font-size: 18px;
     }
 
+
     #page-counter {
       min-width: 84px;
 
@@ -473,6 +524,7 @@
       font-size: 12px;
       font-weight: 600;
     }
+
 
     .progress-track {
       width: 190px;
@@ -486,6 +538,7 @@
 
       background: #dce7ed;
     }
+
 
     #progress-bar {
       width: 0%;
@@ -504,8 +557,10 @@
         width .3s ease;
     }
 
+
     .error {
       color: #b00020;
+
       font-weight: 500;
     }
 
@@ -517,42 +572,55 @@
     @media (max-width: 700px) {
 
       .reader-header {
-        min-height: 64px;
+        min-height: 68px;
 
         padding:
-          12px 16px;
+          10px 16px;
       }
+
 
       .reader-label {
         display: none;
       }
 
-      .brand-icon {
-        width: 36px;
-        height: 36px;
+
+      .brand {
+        gap: 11px;
       }
+
+
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+      }
+
 
       .brand-title {
         font-size: 15px;
       }
 
+
       .brand-subtitle {
         font-size: 8px;
       }
+
 
       .book-info {
         padding:
           18px 14px 10px;
       }
 
+
       #book-title {
         font-size: 20px;
       }
+
 
       .reader-area {
         padding:
           20px 10px 35px;
       }
+
 
       .reading-surface {
         width: 100%;
@@ -565,9 +633,11 @@
         border-radius: 20px;
       }
 
+
       .side-arrow {
         display: none;
       }
+
 
       .reader-toolbar {
         grid-template-columns:
@@ -577,14 +647,18 @@
           10px 12px;
       }
 
+
       .toolbar-button .label {
         display: none;
       }
 
+
       .toolbar-button {
         width: 40px;
+
         padding: 0;
       }
+
 
       .progress-track {
         width: 110px;
@@ -603,11 +677,16 @@
 
   <div class="brand">
 
-    <div class="brand-icon">
-      IJN
+    <div class="brand-logo">
+      <img
+        src="ijn-logo.png"
+        alt="Institut Jantung Negara Logo"
+      >
     </div>
 
-    <div>
+
+    <div class="brand-text">
+
       <div class="brand-title">
         Digital Library
       </div>
@@ -615,6 +694,7 @@
       <div class="brand-subtitle">
         Institut Jantung Negara
       </div>
+
     </div>
 
   </div>
@@ -848,8 +928,10 @@
       titleElement.textContent =
         "No publication selected";
 
+
       status.innerHTML =
         '<span class="error">Please use a valid publication link.</span>';
+
 
       return;
 
@@ -887,8 +969,10 @@
         titleElement.textContent =
           "Publication not found";
 
+
         status.innerHTML =
           '<span class="error">This publication does not exist.</span>';
+
 
         return;
 
@@ -955,17 +1039,11 @@
 
 
       /*
-      NORMAL FIXED DISPLAY SIZE
-
-      No viewport fitting.
-      No dynamic height calculations.
-
-      PageFlip will display the book
-      at this normal size.
+      NORMAL STABLE BOOK SIZE
       */
 
-
-      const pageWidth = 430;
+      const pageWidth =
+        430;
 
 
       const pageHeight =
@@ -980,7 +1058,6 @@
       RENDER ALL PDF PAGES
       */
 
-
       for (
         let pageNumber = 1;
         pageNumber <= pdf.numPages;
@@ -992,12 +1069,6 @@
           await pdf.getPage(
             pageNumber
           );
-
-
-        /*
-        Higher rendering resolution
-        keeps text reasonably sharp.
-        */
 
 
         const renderViewport =
@@ -1078,7 +1149,6 @@
       /*
       CREATE FLIPBOOK
       */
-
 
       const pageFlip =
         new St.PageFlip(
