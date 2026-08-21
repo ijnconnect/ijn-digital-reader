@@ -131,7 +131,6 @@
 
   <main id="pdf-pages"></main>
 
-
   <script type="module">
 
     import * as pdfjsLib from
@@ -144,15 +143,17 @@
     async function loadBook() {
 
       const params = new URLSearchParams(window.location.search);
-
       const bookId = params.get("book");
 
       const status = document.getElementById("status");
       const pagesContainer = document.getElementById("pdf-pages");
+      const titleElement = document.getElementById("book-title");
+      const subtitleElement = document.getElementById("book-subtitle");
+
 
       if (!bookId) {
 
-        document.getElementById("book-title").textContent =
+        titleElement.textContent =
           "No publication selected";
 
         status.innerHTML =
@@ -186,7 +187,7 @@
 
         if (!book) {
 
-          document.getElementById("book-title").textContent =
+          titleElement.textContent =
             "Publication not found";
 
           status.innerHTML =
@@ -196,11 +197,42 @@
         }
 
 
-        document.getElementById("book-title").textContent =
+        titleElement.textContent =
           book.title;
 
-        document.getElementById("book-subtitle").textContent =
+        subtitleElement.textContent =
           book.subtitle || "";
+
+
+        /*
+        -------------------------
+        CHECK PDF PATH
+        -------------------------
+        */
+
+        if (!book.pdf) {
+          throw new Error(
+            `PDF path missing for book: ${bookId}`
+          );
+        }
+
+
+        /*
+        -------------------------
+        BUILD FULL PDF URL
+        -------------------------
+        */
+
+        const pdfUrl =
+          new URL(
+            book.pdf,
+            window.location.href
+          ).href;
+
+        console.log(
+          "Loading PDF from:",
+          pdfUrl
+        );
 
 
         status.textContent =
@@ -212,23 +244,14 @@
         LOAD PDF
         -------------------------
         */
-if (!book.pdf) {
-  throw new Error(
-    `PDF path is missing for book: ${bookId}`
-  );
-}
 
-const pdfUrl = new URL(
-  book.pdf,
-  window.location.href
-).href;
+        const loadingTask =
+          pdfjsLib.getDocument({
+            url: pdfUrl
+          });
 
-console.log("Loading PDF:", pdfUrl);
-
-const pdf =
-  await pdfjsLib.getDocument({
-    url: pdfUrl
-  }).promise;
+        const pdf =
+          await loadingTask.promise;
 
 
         status.textContent =
@@ -253,13 +276,15 @@ const pdf =
 
           /*
           Higher number = sharper PDF,
-          but also heavier browser workload.
+          but heavier browser workload.
           */
 
           const scale = 1.5;
 
           const viewport =
-            page.getViewport({ scale });
+            page.getViewport({
+              scale: scale
+            });
 
 
           /*
@@ -283,11 +308,12 @@ const pdf =
           const context =
             canvas.getContext("2d");
 
+
           canvas.width =
-            viewport.width;
+            Math.floor(viewport.width);
 
           canvas.height =
-            viewport.height;
+            Math.floor(viewport.height);
 
 
           pageWrapper.appendChild(canvas);
@@ -316,12 +342,14 @@ const pdf =
           RENDER PDF PAGE
           */
 
-          await page.render({
-
+          const renderContext = {
             canvasContext: context,
             viewport: viewport
+          };
 
-          }).promise;
+          await page.render(
+            renderContext
+          ).promise;
 
         }
 
@@ -334,7 +362,10 @@ const pdf =
 
       catch (error) {
 
-        console.error(error);
+        console.error(
+          "IJN Digital Reader Error:",
+          error
+        );
 
         status.innerHTML =
           '<span class="error">Unable to load the PDF. Please check the browser console.</span>';
