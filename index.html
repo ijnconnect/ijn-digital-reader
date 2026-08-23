@@ -881,6 +881,19 @@
       params.get("book");
 
 
+    /*
+    CUSTOM START PAGE
+    Example:
+    ?book=laboratory-user-handbook-2024&page=10
+    */
+
+    const requestedPage =
+      parseInt(
+        params.get("page"),
+        10
+      ) || 1;
+
+
     const status =
       document.getElementById(
         "status"
@@ -1026,6 +1039,23 @@
 
       status.textContent =
         `Preparing ${pdf.numPages} pages...`;
+
+
+      /*
+      SAFE START PAGE
+
+      Prevent values below 1 or above
+      the total number of PDF pages.
+      */
+
+      const safeStartPage =
+        Math.min(
+          Math.max(
+            requestedPage,
+            1
+          ),
+          pdf.numPages
+        );
 
 
       const firstPage =
@@ -1201,6 +1231,20 @@
       );
 
 
+      /*
+      IMPORTANT:
+      OPEN DIRECTLY AT REQUESTED PAGE
+
+      PageFlip uses zero-based indexes:
+      PDF page 1 = index 0
+      PDF page 10 = index 9
+      */
+
+      pageFlip.turnToPage(
+        safeStartPage - 1
+      );
+
+
       function updatePageCounter(
         index
       ) {
@@ -1227,7 +1271,13 @@
       }
 
 
-      updatePageCounter(0);
+      /*
+      Start counter on requested page
+      */
+
+      updatePageCounter(
+        safeStartPage - 1
+      );
 
 
       pageFlip.on(
