@@ -1,59 +1,1761 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#003153">
-<meta name="description" content="Browse IJN patient guides, handbooks, newsletters and publications in the IJN Digital Library.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>IJN Digital Library | Institut Jantung Negara</title>
-<link rel="icon" href="ijn-logo.png" type="image/png">
+
+<meta name="description" content="Explore the Institut Jantung Negara Digital Library. Browse patient guides, handbooks, newsletters and healthcare publications.">
+
+<link rel="icon" type="image/png" href="ijn-logo.png">
+<link rel="apple-touch-icon" href="ijn-logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-:root{--navy:#003153;--deep:#002943;--blue:#2d99c9;--ink:#15354d;--muted:#718697;--line:#e1eaf0;--bg:#f3f6f9;--cabinet:#fff;--shelf:#a9c7da;--shelf-front:#719bb6}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:var(--bg);color:var(--ink);font-family:Poppins,Arial,sans-serif;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}a{color:inherit}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
-.site-header{background:linear-gradient(115deg,#003153,#07547b);color:#fff;padding:14px clamp(18px,4vw,64px);min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:13px;text-decoration:none}.brand img{width:55px;height:48px;object-fit:contain}.brand strong{display:block;font-size:18px;font-weight:600;line-height:1.3}.brand small{display:block;font-size:9px;letter-spacing:1px;opacity:.78}.header-note{font-size:11px;color:#c1dfed}
-.hero{text-align:center;padding:60px 18px 44px;background:radial-gradient(ellipse at 50% 0,#dfeff8 0,transparent 75%)}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:#1685b8;text-transform:uppercase}.hero h1{font-size:clamp(29px,4vw,46px);letter-spacing:-1.2px;line-height:1.25;color:var(--navy);margin:13px 0}.hero p{font-size:13px;color:var(--muted);line-height:1.8;max-width:620px;margin:0 auto 26px}.search-wrap{max-width:570px;margin:auto;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border:1px solid #d8e6ef;border-radius:13px;box-shadow:0 8px 25px #0031530b}.search-wrap svg{flex:0 0 18px;color:#8da4b5}.search-wrap input{width:100%;min-width:0;border:0;outline:0;background:transparent;padding:17px 0;font-size:12px;color:var(--ink)}.search-wrap:focus-within{border-color:#75b6d7;box-shadow:0 0 0 3px #2d99c918}.clear{border:0;background:#edf4f8;color:#54778b;border-radius:50%;width:27px;height:27px;display:none}.clear.show{display:block}
-.container{max-width:1370px;margin:auto;padding:18px clamp(14px,3vw,45px) 90px}.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:30px}.filters{display:flex;flex-wrap:wrap;gap:8px}.filter{background:#fff;color:#526c7f;border:1px solid #dce7ee;border-radius:99px;padding:10px 17px;font-size:11px;font-weight:500;transition:.2s}.filter:hover{border-color:var(--blue);color:var(--navy)}.filter.active{background:var(--navy);color:white;border-color:var(--navy)}.result-count{font-size:11px;color:var(--muted)}
-.collection{margin:0 0 46px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 17px;padding:0 3px}.section-eyebrow{font-size:9px;font-weight:600;letter-spacing:1.5px;color:var(--blue);text-transform:uppercase}.section-heading h2{font-size:clamp(19px,2vw,24px);font-weight:600;letter-spacing:-.5px;color:var(--navy);margin:4px 0 0}.section-heading small{font-size:11px;color:var(--muted);white-space:nowrap}
-/* A complete white cabinet, not a free-floating decorative stripe. */
-.cabinet{background:var(--cabinet);border:1px solid #e1eaf0;border-radius:16px;box-shadow:0 10px 30px rgba(9,48,77,.055);padding:25px 27px 18px;overflow:hidden;position:relative}.cabinet:before,.cabinet:after{content:"";position:absolute;top:20px;bottom:20px;width:5px;border-radius:5px;background:linear-gradient(90deg,#c4d7e4,#edf4f8);pointer-events:none}.cabinet:before{left:10px}.cabinet:after{right:10px;transform:scaleX(-1)}
-/* A row consists of a display area, a shelf slab, and book captions below it. */
-.shelf-unit{margin:0 0 22px}.shelf-unit:last-child{margin-bottom:0}.books-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;align-items:end;padding:9px 12px 0;min-height:246px;background:linear-gradient(180deg,#fff 0%,#fbfdff 55%,#f0f6fa 100%);border-radius:7px 7px 0 0}.book{min-width:0;display:flex;align-items:center;justify-content:end;flex-direction:column;text-decoration:none;position:relative}.book-visual{width:100%;height:228px;display:flex;align-items:end;justify-content:center;position:relative}.cover{position:relative;width:min(100%,155px);height:218px;background:linear-gradient(140deg,#003153,#1b78a4);border-radius:2px 5px 3px 2px;overflow:hidden;box-shadow:4px 6px 12px #0b34492e,1px 0 1px #0003;transition:transform .25s,box-shadow .25s;transform-origin:bottom center}.cover:before{content:"";position:absolute;z-index:2;left:0;top:0;bottom:0;width:9px;background:linear-gradient(90deg,#0005,#fff3,transparent);pointer-events:none}.cover img{display:block;width:100%;height:100%;object-fit:cover}.fallback{height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:15px;color:white;background:linear-gradient(140deg,#003153,#1774a2)}.fallback small{font-size:9px;letter-spacing:1px;opacity:.8}.fallback strong{font-size:13px;line-height:1.45;overflow-wrap:anywhere}.book:hover .cover,.book:focus-visible .cover{transform:translateY(-9px);box-shadow:6px 13px 19px #0b344947}.read-overlay{position:absolute;bottom:12px;left:50%;transform:translate(-50%,5px);opacity:0;white-space:nowrap;background:var(--navy);color:white;border-radius:7px;padding:9px 11px;font-size:10px;font-weight:600;box-shadow:0 5px 12px #00315340;pointer-events:none;transition:.2s}.book:hover .read-overlay,.book:focus-visible .read-overlay{opacity:1;transform:translate(-50%,0)}
-/* Three distinct surfaces create visible physical depth. */
-.shelf-surface{height:13px;margin:0 0 0;position:relative;z-index:2;background:linear-gradient(180deg,#d9e9f2 0%,#a9c9dc 42%,#88afc7 100%);border:1px solid #9bbbd0;border-radius:3px 3px 0 0;box-shadow:0 -2px 4px #0031530b}.shelf-front{height:18px;background:linear-gradient(180deg,#6e9ab7 0%,#89b0c9 40%,#b9d3e3 100%);border-radius:0 0 5px 5px;border-bottom:2px solid #789fb9;box-shadow:0 10px 14px #0b3e5b25;position:relative;z-index:2}.shelf-front:after{content:"";position:absolute;left:2%;right:2%;top:3px;height:1px;background:#e9f5fc90}
-/* Titles are BELOW the shelf, in their own aligned row. */
-.labels-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;padding:15px 12px 7px}.book-info{text-align:center;min-width:0}.book-info h3{font-size:11px;line-height:1.5;font-weight:600;margin:0 0 5px;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}.book-info p{font-size:10px;color:var(--muted);margin:0}.book-info a{text-decoration:none}.book-info a:hover{color:#167eae;text-decoration:underline}
-.empty{padding:55px 20px;text-align:center;background:white;border:1px solid var(--line);border-radius:14px}.empty h2{font-size:17px;margin:0 0 8px}.empty p{font-size:12px;color:var(--muted);margin:0}.site-footer{text-align:center;color:#8192a0;font-size:10px;padding:25px;border-top:1px solid var(--line);background:#f9fbfc}
-@media(max-width:1100px){.books-row,.labels-row{grid-template-columns:repeat(4,minmax(0,1fr))}.cover{width:min(100%,150px);height:211px}.book-visual{height:220px}.books-row{min-height:230px}}
-@media(max-width:800px){.books-row,.labels-row{grid-template-columns:repeat(3,minmax(0,1fr))}.container{padding-left:20px;padding-right:20px}.cabinet{padding:20px 20px 15px}.books-row{gap:12px}.labels-row{gap:12px}.cover{width:min(100%,145px);height:203px}.book-visual{height:212px}}
-@media(max-width:600px){.site-header{min-height:66px;padding:10px 15px}.brand{gap:10px}.brand img{width:43px;height:42px}.brand strong{font-size:15px}.brand small{font-size:7px}.header-note{display:none}.hero{padding:43px 16px 32px}.hero h1{font-size:29px}.hero p{font-size:12px}.search-wrap input{padding:14px 0;font-size:11px}.container{padding:14px 12px 65px}.toolbar{margin-bottom:24px}.filter{padding:8px 12px;font-size:10px}.result-count{width:100%;font-size:10px}.section-heading{margin-bottom:13px}.section-heading h2{font-size:19px}.section-heading small{font-size:10px}.cabinet{padding:14px 13px 10px;border-radius:12px}.cabinet:before{left:4px;width:3px}.cabinet:after{right:4px;width:3px}.books-row,.labels-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-left:5px;padding-right:5px}.books-row{min-height:0;padding-top:7px}.book-visual{height:clamp(156px,49vw,205px)}.cover{height:calc(100% - 7px);width:min(100%,139px)}.labels-row{padding-top:12px}.book-info h3{font-size:10px}.book-info p{font-size:9px}.shelf-surface{height:11px}.shelf-front{height:15px}.read-overlay{display:none}}
-@media(max-width:370px){.cabinet{padding-left:10px;padding-right:10px}.books-row,.labels-row{gap:7px}.fallback strong{font-size:11px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cover,.read-overlay{transition:none}.book:hover .cover{transform:none}}
+
+/* =========================================================
+   IJN DIGITAL LIBRARY V4
+   PREMIUM BLUE BOOKSHELF
+   ========================================================= */
+
+:root {
+  --navy: #003153;
+  --navy-dark: #002640;
+  --blue: #2D99C9;
+  --ink: #102E49;
+  --muted: #708297;
+
+  --background: #F3F6FA;
+  --white: #FFFFFF;
+  --line: #DDE8F0;
+
+  --shelf-top: #E0EDF5;
+  --shelf-mid: #B5D0E1;
+  --shelf-front: #89AEC6;
+  --shelf-bottom: #638EA9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--background);
+  color: var(--ink);
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.site-header {
+  min-height: 84px;
+  padding: 14px clamp(18px, 4vw, 70px);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: linear-gradient(
+    110deg,
+    #003153,
+    #07527A
+  );
+
+  color: #FFFFFF;
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  min-width: 0;
+  text-decoration: none;
+}
+
+.site-brand img {
+  width: 60px;
+  height: 52px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.site-brand strong {
+  display: block;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.site-brand small {
+  display: block;
+  margin-top: 3px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+.header-label {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+  padding: 70px 20px 48px;
+  text-align: center;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      #E0F0F9,
+      transparent 70%
+    );
+}
+
+.hero-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #1685B8;
+}
+
+.hero h1 {
+  margin: 13px 0;
+  font-size: clamp(30px, 4vw, 47px);
+  font-weight: 600;
+  letter-spacing: -1px;
+  color: var(--navy);
+}
+
+.hero p {
+  max-width: 650px;
+  margin: 0 auto 28px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.search-box {
+  max-width: 590px;
+  min-height: 56px;
+
+  margin: 0 auto;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+
+  box-shadow: 0 10px 28px rgba(0,49,83,0.055);
+}
+
+.search-icon {
+  width: 19px;
+  height: 19px;
+  color: #8CA3B2;
+  flex-shrink: 0;
+}
+
+.search-box input {
+  width: 100%;
+  min-width: 0;
+  height: 54px;
+
+  border: 0;
+  outline: none;
+  background: transparent;
+
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.search-box input::placeholder {
+  color: #95A5B2;
+}
+
+.search-box:focus-within {
+  border-color: #7EB8D5;
+  box-shadow: 0 0 0 3px rgba(45,153,201,0.08);
+}
+
+.clear-search {
+  display: none;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+
+  border: 0;
+  border-radius: 50%;
+  background: #EEF4F8;
+  color: #6B8395;
+  font-size: 18px;
+}
+
+.clear-search.visible {
+  display: block;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.container {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 20px clamp(18px, 4vw, 60px) 90px;
+}
+
+.library-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  margin-bottom: 35px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.filter {
+  min-height: 41px;
+  padding: 0 18px;
+
+  border: 1px solid var(--line);
+  border-radius: 30px;
+
+  background: white;
+  color: #486579;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  transition: 0.2s ease;
+}
+
+.filter:hover {
+  border-color: var(--blue);
+  color: var(--navy);
+}
+
+.filter.active {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+
+.library-count {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* =========================================================
+   COLLECTION SECTION
+   ========================================================= */
+
+.collection-section {
+  margin-bottom: 48px;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+
+  margin-bottom: 22px;
+}
+
+.section-eyebrow {
+  margin-bottom: 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(20px, 2vw, 25px);
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.section-count {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   WHITE BOOKSHELF CABINET
+   ========================================================= */
+
+.bookshelf-cabinet {
+  position: relative;
+
+  padding: 25px 24px 30px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #FFFFFF 0%,
+      #FAFCFE 100%
+    );
+
+  border: 1px solid #E0EAF1;
+  border-radius: 15px;
+
+  box-shadow:
+    0 8px 28px rgba(0,49,83,0.045),
+    inset 0 0 0 5px rgba(236,244,249,0.55);
+}
+
+/*
+ * Cabinet side frames.
+ */
+
+.bookshelf-cabinet::before,
+.bookshelf-cabinet::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  width: 7px;
+  border-radius: 4px;
+
+  background: linear-gradient(
+    90deg,
+    #D6E6F0,
+    #EDF5FA
+  );
+}
+
+.bookshelf-cabinet::before {
+  left: 9px;
+}
+
+.bookshelf-cabinet::after {
+  right: 9px;
+}
+
+/* =========================================================
+   SHELF ROW
+   ========================================================= */
+
+/*
+ * The book area is separate from the shelf surface.
+ * The physical shelf sits directly underneath the covers.
+ */
+
+.shelf-unit {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.shelf-unit:last-child {
+  margin-bottom: 0;
+}
+
+.shelf-books {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+
+  align-items: end;
+
+  padding: 18px 22px 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #FFFFFF,
+      #F7FBFD
+    );
+
+  border-radius: 8px 8px 0 0;
+}
+
+/*
+ * Shelf surface.
+ */
+
+.shelf-surface {
+  position: relative;
+
+  height: 18px;
+
+  margin: 0 8px;
+
+  background: linear-gradient(
+    180deg,
+    #EFF7FC 0%,
+    #D3E6F1 28%,
+    #A7C6DA 100%
+  );
+
+  border-top: 2px solid #FFFFFF;
+  border-radius: 2px 2px 0 0;
+
+  box-shadow:
+    0 -2px 4px rgba(0,49,83,0.045);
+}
+
+/*
+ * Thick front face makes the shelf look solid,
+ * rather than like a blurred horizontal line.
+ */
+
+.shelf-surface::after {
+  content: "";
+
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+
+  height: 17px;
+
+  background: linear-gradient(
+    180deg,
+    #8FB6CE 0%,
+    #729EBB 55%,
+    #557F9D 100%
+  );
+
+  border-radius: 0 0 4px 4px;
+
+  border-bottom: 2px solid #47718F;
+
+  box-shadow:
+    0 10px 14px rgba(0,49,83,0.13);
+}
+
+/*
+ * Publication details sit BELOW the physical shelf,
+ * rather than between the books and shelf.
+ */
+
+.shelf-details {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+
+  padding: 49px 22px 8px;
+}
+
+/* =========================================================
+   BOOK COVER
+   ========================================================= */
+
+.book {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  min-width: 0;
+  height: 265px;
+
+  text-decoration: none;
+  position: relative;
+}
+
+.book-cover {
+  position: relative;
+
+  width: min(100%, 170px);
+  height: 245px;
+
+  overflow: hidden;
+
+  border-radius: 3px 6px 6px 3px;
+
+  background: linear-gradient(
+    140deg,
+    #003153,
+    #237DA9
+  );
+
+  box-shadow:
+    3px 4px 5px rgba(0,49,83,0.13),
+    7px 10px 18px rgba(0,49,83,0.20);
+
+  transform-origin: bottom center;
+
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+/* Book spine */
+
+.book-cover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 11px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(0,0,0,0.25),
+    rgba(255,255,255,0.18),
+    transparent
+  );
+
+  z-index: 2;
+}
+
+.book-cover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 3px;
+
+  background: rgba(0,0,0,0.13);
+  z-index: 2;
+}
+
+.book-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book:hover .book-cover,
+.book:focus-visible .book-cover {
+  transform: translateY(-12px) rotate(-2deg);
+
+  box-shadow:
+    9px 15px 24px rgba(0,49,83,0.26);
+}
+
+/* Fallback cover */
+
+.fallback-cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100%;
+  padding: 17px;
+
+  background:
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(255,255,255,0.15),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #003153,
+      #1C729D
+    );
+
+  color: white;
+}
+
+.fallback-brand {
+  font-size: 9px;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+.fallback-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* Read button */
+
+.book-action {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+
+  transform: translate(-50%, 7px);
+
+  padding: 9px 12px;
+
+  border-radius: 7px;
+
+  background: var(--navy);
+  color: white;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+
+  box-shadow: 0 8px 18px rgba(0,49,83,0.24);
+
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+.book:hover .book-action,
+.book:focus-visible .book-action {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* =========================================================
+   PUBLICATION DETAILS
+   ========================================================= */
+
+.book-details {
+  min-width: 0;
+  text-align: center;
+}
+
+.book-title {
+  margin: 0 0 6px;
+
+  color: var(--ink);
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.book-meta {
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+  padding: 65px 20px;
+  text-align: center;
+
+  background: white;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+}
+
+.empty-title {
+  margin: 0 0 9px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.empty-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.site-footer {
+  padding: 26px 20px;
+
+  border-top: 1px solid var(--line);
+  background: #FFFFFF;
+
+  color: #8294A1;
+  font-size: 10px;
+  text-align: center;
+}
+
+/* =========================================================
+   LAPTOP
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .shelf-books,
+  .shelf-details {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+  }
+
+  .book-cover {
+    width: min(100%, 155px);
+    height: 220px;
+  }
+
+  .book {
+    height: 240px;
+  }
+
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .container {
+    padding: 18px 22px 75px;
+  }
+
+  .shelf-books,
+  .shelf-details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 13px;
+  }
+
+  .bookshelf-cabinet {
+    padding: 18px 15px 25px;
+  }
+
+  .shelf-books {
+    padding: 15px 12px 0;
+  }
+
+  .shelf-details {
+    padding: 47px 12px 5px;
+  }
+
+  .book {
+    height: 225px;
+  }
+
+  .book-cover {
+    width: min(100%, 145px);
+    height: 205px;
+  }
+
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .site-header {
+    min-height: 67px;
+    padding: 10px 15px;
+  }
+
+  .site-brand {
+    gap: 10px;
+  }
+
+  .site-brand img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .site-brand strong {
+    font-size: 15px;
+  }
+
+  .site-brand small {
+    font-size: 7px;
+    letter-spacing: 0.7px;
+  }
+
+  .header-label {
+    display: none;
+  }
+
+  .hero {
+    padding: 43px 17px 34px;
+  }
+
+  .hero h1 {
+    font-size: clamp(27px, 7vw, 35px);
+  }
+
+  .hero p {
+    font-size: 12px;
+    margin-bottom: 23px;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+  }
+
+  .search-box {
+    min-height: 51px;
+    padding: 0 13px;
+  }
+
+  .search-box input {
+    height: 49px;
+    font-size: 11px;
+  }
+
+  .container {
+    padding: 15px 12px 60px;
+  }
+
+  .library-toolbar {
+    margin-bottom: 28px;
+  }
+
+  .filters {
+    gap: 7px;
+  }
+
+  .filter {
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 10px;
+  }
+
+  .library-count {
+    width: 100%;
+    font-size: 10px;
+  }
+
+  .section-head {
+    margin-bottom: 18px;
+  }
+
+  .section-head h2 {
+    font-size: 19px;
+  }
+
+  .section-count {
+    font-size: 10px;
+  }
+
+  .bookshelf-cabinet {
+    padding: 15px 9px 20px;
+    border-radius: 11px;
+  }
+
+  .bookshelf-cabinet::before,
+  .bookshelf-cabinet::after {
+    width: 4px;
+  }
+
+  .bookshelf-cabinet::before {
+    left: 3px;
+  }
+
+  .bookshelf-cabinet::after {
+    right: 3px;
+  }
+
+  .shelf-books,
+  .shelf-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .shelf-books {
+    padding: 12px 8px 0;
+  }
+
+  .shelf-details {
+    padding: 44px 8px 4px;
+  }
+
+  .book {
+    height: 195px;
+  }
+
+  .book-cover {
+    width: min(100%, 132px);
+    height: 185px;
+  }
+
+  .shelf-surface {
+    margin: 0 3px;
+    height: 13px;
+  }
+
+  .shelf-surface::after {
+    height: 14px;
+  }
+
+  .book-action {
+    display: none;
+  }
+
+  .book-title {
+    font-size: 10px;
+  }
+
+  .book-meta {
+    font-size: 9px;
+  }
+
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .container {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .shelf-books,
+  .shelf-details {
+    gap: 7px;
+  }
+
+  .book {
+    height: 185px;
+  }
+
+  .book-cover {
+    width: min(100%, 120px);
+    height: 174px;
+  }
+
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .book-cover,
+  .book-action,
+  .filter {
+    transition: none;
+  }
+
+  .book:hover .book-cover {
+    transform: none;
+  }
+
+}
+
 </style>
 </head>
+
 <body>
-<header class="site-header"><a class="brand" href="library.html" aria-label="IJN Digital Library home"><img src="ijn-logo.png" alt="IJN logo"><span><strong>Digital Library</strong><small>INSTITUT JANTUNG NEGARA</small></span></a><span class="header-note">IJN Knowledge Collection</span></header>
-<section class="hero"><div class="eyebrow">IJN Knowledge Collection</div><h1>Explore Our Digital Library</h1><p>Discover patient education guides, handbooks, newsletters and healthcare publications in one convenient digital collection.</p><label class="search-wrap"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" type="search" placeholder="Search titles, topics, services or year..." aria-label="Search digital library"><button class="clear" id="clear" type="button" aria-label="Clear search">×</button></label></section>
-<main class="container"><div class="toolbar"><nav class="filters" id="filters" aria-label="Publication categories"></nav><span class="result-count" id="count">Loading publications...</span></div><div id="sections" aria-live="polite"><div class="empty"><h2>Loading library...</h2></div></div></main>
-<footer class="site-footer">© Institut Jantung Negara · Digital Library</footer>
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<header class="site-header">
+
+  <a href="library.html" class="site-brand" aria-label="IJN Digital Library homepage">
+
+    <img src="ijn-logo.png" alt="IJN logo">
+
+    <div>
+      <strong>Digital Library</strong>
+      <small>INSTITUT JANTUNG NEGARA</small>
+    </div>
+
+  </a>
+
+  <div class="header-label">
+    IJN Knowledge Collection
+  </div>
+
+</header>
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+
+<section class="hero">
+
+  <div class="hero-inner">
+
+    <div class="eyebrow">IJN Knowledge Collection</div>
+
+    <h1>Explore Our Digital Library</h1>
+
+    <p>
+      Discover patient education guides, handbooks,
+      newsletters and healthcare publications in one
+      convenient digital collection.
+    </p>
+
+    <div class="search-box" role="search">
+
+      <svg
+        class="search-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-4-4"></path>
+      </svg>
+
+      <input
+        type="search"
+        id="search"
+        placeholder="Search publications, topics or year..."
+        aria-label="Search digital library"
+        autocomplete="off"
+      >
+
+      <button
+        type="button"
+        id="clear-search"
+        class="clear-search"
+        aria-label="Clear search"
+      >×</button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+     LIBRARY
+     ========================================================= -->
+
+<main class="container">
+
+  <div class="library-toolbar">
+
+    <nav
+      class="filters"
+      id="filters"
+      aria-label="Publication categories"
+    ></nav>
+
+    <div id="library-count" class="library-count">
+      Loading publications...
+    </div>
+
+  </div>
+
+  <div id="sections" aria-live="polite">
+
+    <div class="empty-state">
+      <h2 class="empty-title">Loading digital library...</h2>
+      <p class="empty-description">
+        Please wait while publications are loaded.
+      </p>
+    </div>
+
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  © Institut Jantung Negara · Digital Library
+</footer>
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
 <script>
-'use strict';
-const LABELS={'patient-guide':'Patient Guides','patient-guides':'Patient Guides','handbook':'Handbooks','handbooks':'Handbooks','heartbeat':'Heartbeat','annual-report':'Annual Reports','annual-reports':'Annual Reports','clinical':'Clinical Publications','clinical-publication':'Clinical Publications','publication':'Publications','publications':'Publications'};
-const $=id=>document.getElementById(id);
-let books=[],active='all',lastColumns=columns();
-function label(key){return LABELS[key]||String(key||'Other Publications').replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
-function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n}
-function columns(){const w=window.innerWidth;return w<=600?2:w<=800?3:w<=1100?4:5}
-function coverFor(b){const a=el('a','book');a.href='index.html?book='+encodeURIComponent(b.id);a.setAttribute('aria-label','Read '+b.title);const visual=el('div','book-visual'),cover=el('div','cover'),fallback=el('div','fallback');fallback.append(el('small','','IJN DIGITAL LIBRARY'),el('strong','',b.title));if(b.cover){const img=el('img');img.src=b.cover;img.alt='Cover of '+b.title;img.loading='lazy';img.decoding='async';img.onerror=()=>{img.remove();cover.append(fallback)};cover.append(img)}else cover.append(fallback);visual.append(cover,el('span','read-overlay','↗ Read Publication'));a.append(visual);return a}
-function infoFor(b){const info=el('div','book-info'),a=el('a');a.href='index.html?book='+encodeURIComponent(b.id);a.append(el('h3','',b.title));const meta=[b.subtitle,b.year].filter(Boolean).map(String).filter((v,i,arr)=>arr.indexOf(v)===i).join(' · ');info.append(a,el('p','',meta));return info}
-function shelfFor(items){const cabinet=el('div','cabinet'),per=columns();for(let i=0;i<items.length;i+=per){const batch=items.slice(i,i+per),unit=el('div','shelf-unit'),row=el('div','books-row'),labels=el('div','labels-row');batch.forEach(b=>{row.append(coverFor(b));labels.append(infoFor(b))});unit.append(row,el('div','shelf-surface'),el('div','shelf-front'),labels);cabinet.append(unit)}return cabinet}
-function searchable(b){return [b.title,b.subtitle,b.year,b.category,label(b.category),b.description,b.topics,b.keywords,b.services,b.related_services].flat(Infinity).filter(v=>v!=null).map(v=>typeof v==='object'?Object.values(v).join(' '):String(v)).join(' ').toLowerCase()}
-function render(){const q=$('search').value.trim().toLowerCase(),matches=books.filter(b=>(active==='all'||b.category===active)&&(!q||searchable(b).includes(q)));$('count').textContent=matches.length+' '+(matches.length===1?'publication':'publications')+' found';const root=$('sections');root.replaceChildren();if(!matches.length){const empty=el('div','empty');empty.append(el('h2','','No publications found'),el('p','','Try another keyword or select a different category.'));root.append(empty);return}const groups=new Map();matches.forEach(b=>{if(!groups.has(b.category))groups.set(b.category,[]);groups.get(b.category).push(b)});for(const [cat,items] of groups){const section=el('section','collection'),heading=el('div','section-heading'),left=el('div');left.append(el('div','section-eyebrow','IJN Digital Collection'),el('h2','',label(cat)));heading.append(left,el('small','',items.length+' '+(items.length===1?'publication':'publications')));section.append(heading,shelfFor(items));root.append(section)}}
-function filters(){const nav=$('filters');nav.replaceChildren();['all',...new Set(books.map(b=>b.category))].forEach(cat=>{const btn=el('button','filter'+(cat===active?' active':''),cat==='all'?'All Publications':label(cat));btn.type='button';btn.setAttribute('aria-pressed',String(cat===active));btn.onclick=()=>{active=cat;filters();render()};nav.append(btn)})}
-async function init(){try{const r=await fetch('library/books.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const data=await r.json();books=Object.entries(data).filter(([,b])=>b&&typeof b==='object'&&b.pdf).map(([id,b])=>({...b,id,title:String(b.title||'Untitled Publication'),category:String(b.category||'other').toLowerCase()}));books.sort((a,b)=>(Number(b.year)||0)-(Number(a.year)||0));filters();render()}catch(err){console.error(err);$('count').textContent='Library unavailable';const empty=el('div','empty');empty.append(el('h2','','Unable to load the library'),el('p','','Please try again later.'));$('sections').replaceChildren(empty)}}
-$('search').addEventListener('input',()=>{$('clear').classList.toggle('show',!!$('search').value);render()});$('clear').onclick=()=>{$('search').value='';$('clear').classList.remove('show');$('search').focus();render()};let timer;window.addEventListener('resize',()=>{clearTimeout(timer);timer=setTimeout(()=>{const next=columns();if(next!==lastColumns){lastColumns=next;render()}},120)});init();
+
+"use strict";
+
+/* =========================================================
+   CATEGORY LABELS
+   ========================================================= */
+
+const LABELS = {
+  "patient-guide": "Patient Guides",
+  "patient-guides": "Patient Guides",
+  "handbook": "Handbooks",
+  "handbooks": "Handbooks",
+  "heartbeat": "Heartbeat",
+  "annual-report": "Annual Reports",
+  "annual-reports": "Annual Reports",
+  "clinical": "Clinical Publications",
+  "clinical-publication": "Clinical Publications",
+  "publication": "Publications",
+  "publications": "Publications"
+};
+
+const $ = id => document.getElementById(id);
+
+let allBooks = [];
+let activeCategory = "all";
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function categoryLabel(key) {
+
+  return LABELS[key] ||
+    String(key || "Other Publications")
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, character => character.toUpperCase());
+
+}
+
+function make(tag, className, text) {
+
+  const element = document.createElement(tag);
+
+  if (className) {
+    element.className = className;
+  }
+
+  if (text !== undefined) {
+    element.textContent = text;
+  }
+
+  return element;
+
+}
+
+/* =========================================================
+   RESPONSIVE COLUMNS
+   ========================================================= */
+
+function getBooksPerRow() {
+
+  const width = window.innerWidth;
+
+  if (width <= 600) return 2;
+  if (width <= 800) return 3;
+  if (width <= 1100) return 4;
+
+  return 5;
+
+}
+
+/* =========================================================
+   CREATE BOOK COVER
+   ========================================================= */
+
+function createBook(book) {
+
+  const link = make("a", "book");
+
+  link.href =
+    `index.html?book=${encodeURIComponent(book.id)}`;
+
+  link.setAttribute(
+    "aria-label",
+    `Read ${book.title}`
+  );
+
+  const cover = make("div", "book-cover");
+
+  const fallback = make("div", "fallback-cover");
+
+  fallback.append(
+    make("div", "fallback-brand", "IJN DIGITAL LIBRARY"),
+    make("div", "fallback-title", book.title)
+  );
+
+  if (book.cover) {
+
+    const image = make("img");
+
+    image.src = book.cover;
+    image.alt = `Cover of ${book.title}`;
+    image.loading = "lazy";
+    image.decoding = "async";
+
+    image.onerror = () => {
+
+      image.remove();
+      cover.appendChild(fallback);
+
+    };
+
+    cover.appendChild(image);
+
+  } else {
+
+    cover.appendChild(fallback);
+
+  }
+
+  const action = make(
+    "span",
+    "book-action",
+    "↗ Read Publication"
+  );
+
+  link.append(cover, action);
+
+  return link;
+
+}
+
+/* =========================================================
+   CREATE BOOK DETAILS
+   ========================================================= */
+
+function createBookDetails(book) {
+
+  const details = make("div", "book-details");
+
+  const title = make(
+    "h3",
+    "book-title",
+    book.title
+  );
+
+  title.title = book.title;
+
+  const metadata = [
+    book.subtitle,
+    book.year
+  ]
+    .filter(Boolean)
+    .map(String)
+    .filter((value, index, array) =>
+      array.indexOf(value) === index
+    )
+    .join(" · ");
+
+  const meta = make(
+    "p",
+    "book-meta",
+    metadata
+  );
+
+  details.append(title, meta);
+
+  return details;
+
+}
+
+/* =========================================================
+   CREATE SHELF UNIT
+   ========================================================= */
+
+function createShelfUnit(books) {
+
+  const unit = make("div", "shelf-unit");
+
+  const bookRow = make("div", "shelf-books");
+
+  const shelfSurface = make(
+    "div",
+    "shelf-surface"
+  );
+
+  const detailsRow = make(
+    "div",
+    "shelf-details"
+  );
+
+  books.forEach(book => {
+
+    bookRow.appendChild(
+      createBook(book)
+    );
+
+    detailsRow.appendChild(
+      createBookDetails(book)
+    );
+
+  });
+
+  unit.append(
+    bookRow,
+    shelfSurface,
+    detailsRow
+  );
+
+  return unit;
+
+}
+
+/* =========================================================
+   CREATE CABINET
+   ========================================================= */
+
+function createCabinet(books) {
+
+  const cabinet = make(
+    "div",
+    "bookshelf-cabinet"
+  );
+
+  const perRow = getBooksPerRow();
+
+  for (
+    let index = 0;
+    index < books.length;
+    index += perRow
+  ) {
+
+    const rowBooks = books.slice(
+      index,
+      index + perRow
+    );
+
+    cabinet.appendChild(
+      createShelfUnit(rowBooks)
+    );
+
+  }
+
+  return cabinet;
+
+}
+
+/* =========================================================
+   SEARCH METADATA
+   ========================================================= */
+
+function searchableText(book) {
+
+  const values = [
+    book.title,
+    book.subtitle,
+    book.year,
+    book.category,
+    categoryLabel(book.category),
+    book.description,
+    book.topics,
+    book.keywords,
+    book.services,
+    book.related_services
+  ];
+
+  return values
+    .flat(Infinity)
+    .filter(value =>
+      value !== null &&
+      value !== undefined
+    )
+    .map(value =>
+      typeof value === "object"
+        ? Object.values(value).join(" ")
+        : String(value)
+    )
+    .join(" ")
+    .toLowerCase();
+
+}
+
+/* =========================================================
+   RENDER LIBRARY
+   ========================================================= */
+
+function renderLibrary() {
+
+  const query = $("search")
+    .value
+    .trim()
+    .toLowerCase();
+
+  const filtered = allBooks.filter(book => {
+
+    const categoryMatches =
+      activeCategory === "all" ||
+      book.category === activeCategory;
+
+    const searchMatches =
+      !query ||
+      searchableText(book).includes(query);
+
+    return categoryMatches && searchMatches;
+
+  });
+
+  const root = $("sections");
+
+  root.replaceChildren();
+
+  $("library-count").textContent =
+    `${filtered.length} ${
+      filtered.length === 1
+        ? "publication"
+        : "publications"
+    } found`;
+
+  if (!filtered.length) {
+
+    const empty = make(
+      "div",
+      "empty-state"
+    );
+
+    empty.append(
+      make(
+        "h2",
+        "empty-title",
+        "No publications found"
+      ),
+      make(
+        "p",
+        "empty-description",
+        "Try another keyword or select a different category."
+      )
+    );
+
+    root.appendChild(empty);
+
+    return;
+
+  }
+
+  const groups = new Map();
+
+  filtered.forEach(book => {
+
+    if (!groups.has(book.category)) {
+      groups.set(book.category, []);
+    }
+
+    groups.get(book.category).push(book);
+
+  });
+
+  for (const [category, books] of groups) {
+
+    const section = make(
+      "section",
+      "collection-section"
+    );
+
+    const head = make(
+      "div",
+      "section-head"
+    );
+
+    const headingWrap = make("div");
+
+    headingWrap.append(
+      make(
+        "div",
+        "section-eyebrow",
+        "IJN Digital Collection"
+      ),
+      make(
+        "h2",
+        "",
+        categoryLabel(category)
+      )
+    );
+
+    const count = make(
+      "div",
+      "section-count",
+      `${books.length} ${
+        books.length === 1
+          ? "publication"
+          : "publications"
+      }`
+    );
+
+    head.append(
+      headingWrap,
+      count
+    );
+
+    section.append(
+      head,
+      createCabinet(books)
+    );
+
+    root.appendChild(section);
+
+  }
+
+}
+
+/* =========================================================
+   RENDER FILTERS
+   ========================================================= */
+
+function renderFilters() {
+
+  const nav = $("filters");
+
+  nav.replaceChildren();
+
+  const categories = [
+    "all",
+    ...new Set(
+      allBooks.map(book => book.category)
+    )
+  ];
+
+  categories.forEach(category => {
+
+    const button = make(
+      "button",
+      "filter" +
+        (category === activeCategory ? " active" : ""),
+      category === "all"
+        ? "All Publications"
+        : categoryLabel(category)
+    );
+
+    button.type = "button";
+
+    button.setAttribute(
+      "aria-pressed",
+      String(category === activeCategory)
+    );
+
+    button.addEventListener("click", () => {
+
+      activeCategory = category;
+
+      renderFilters();
+      renderLibrary();
+
+    });
+
+    nav.appendChild(button);
+
+  });
+
+}
+
+/* =========================================================
+   LOAD EXISTING BOOKS.JSON
+   ========================================================= */
+
+async function initializeLibrary() {
+
+  try {
+
+    const response = await fetch(
+      "library/books.json",
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) {
+
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+
+    }
+
+    const data = await response.json();
+
+    allBooks = Object.entries(data)
+      .filter(([, book]) =>
+        book &&
+        typeof book === "object" &&
+        book.pdf
+      )
+      .map(([id, book]) => ({
+
+        ...book,
+
+        id,
+
+        title: String(
+          book.title || "Untitled Publication"
+        ),
+
+        category: String(
+          book.category || "other"
+        ).toLowerCase()
+
+      }));
+
+    allBooks.sort((a, b) =>
+      (Number(b.year) || 0) -
+      (Number(a.year) || 0)
+    );
+
+    renderFilters();
+    renderLibrary();
+
+  } catch (error) {
+
+    console.error(
+      "IJN Digital Library:",
+      error
+    );
+
+    $("library-count").textContent =
+      "Library unavailable";
+
+    const empty = make(
+      "div",
+      "empty-state"
+    );
+
+    empty.append(
+      make(
+        "h2",
+        "empty-title",
+        "Unable to load the library"
+      ),
+      make(
+        "p",
+        "empty-description",
+        "Please try again later."
+      )
+    );
+
+    $("sections").replaceChildren(empty);
+
+  }
+
+}
+
+/* =========================================================
+   LIVE SEARCH
+   ========================================================= */
+
+$("search").addEventListener(
+  "input",
+  () => {
+
+    $("clear-search").classList.toggle(
+      "visible",
+      $("search").value.length > 0
+    );
+
+    renderLibrary();
+
+  }
+);
+
+/* =========================================================
+   CLEAR SEARCH
+   ========================================================= */
+
+$("clear-search").addEventListener(
+  "click",
+  () => {
+
+    $("search").value = "";
+
+    $("clear-search").classList.remove(
+      "visible"
+    );
+
+    $("search").focus();
+
+    renderLibrary();
+
+  }
+);
+
+/* =========================================================
+   RESPONSIVE SHELF REBUILD
+   ========================================================= */
+
+let resizeTimer;
+
+let previousColumns = getBooksPerRow();
+
+window.addEventListener("resize", () => {
+
+  clearTimeout(resizeTimer);
+
+  resizeTimer = setTimeout(() => {
+
+    const currentColumns = getBooksPerRow();
+
+    if (currentColumns !== previousColumns) {
+
+      previousColumns = currentColumns;
+
+      renderLibrary();
+
+    }
+
+  }, 150);
+
+});
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+initializeLibrary();
+
 </script>
+
 </body>
 </html>
