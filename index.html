@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>IJN Digital Reader</title>
+  <link rel="icon" type="image/png" href="ijn-logo.png">
+  <link rel="apple-touch-icon" href="ijn-logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,6 +84,9 @@
 
 
     .brand {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 16px;
@@ -134,6 +139,9 @@
     }
 
 
+    .header-actions { display: flex; align-items: center; gap: 22px; }
+    .library-link { color: white; text-decoration: none; border: 1px solid rgba(255,255,255,.38); border-radius: 9px; padding: 9px 14px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .library-link:hover, .library-link:focus-visible { background: rgba(255,255,255,.13); }
     .reader-label {
       display: flex;
       align-items: center;
@@ -339,6 +347,7 @@
     .page canvas {
       width: 100%;
       height: 100%;
+      object-fit: contain;
 
       display: block;
     }
@@ -597,6 +606,9 @@
 
 
       .brand {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
         gap: 10px;
       }
 
@@ -607,6 +619,8 @@
       }
 
 
+      .library-link { padding: 8px 10px; font-size: 10px; }
+      .header-actions { gap: 8px; }
       .brand-title {
         font-size: 14px;
       }
@@ -768,7 +782,7 @@
 
 <header class="reader-header">
 
-  <div class="brand">
+  <a class="brand" href="library.html" aria-label="Return to IJN Digital Library homepage">
 
     <div class="brand-logo">
       <img
@@ -790,15 +804,18 @@
 
     </div>
 
-  </div>
+  </a>
 
 
-  <div class="reader-label">
+  <div class="header-actions">
+    <a class="library-link" href="library.html">← <span>Back to Library</span></a>
+    <div class="reader-label">
 
     <span class="reader-dot"></span>
 
     Interactive Publication Reader
 
+    </div>
   </div>
 
 </header>
@@ -1131,175 +1148,67 @@
         `Preparing ${pdf.numPages} pages...`;
 
 
-      const safeStartPage =
-        Math.min(
-          Math.max(
-            requestedPage,
-            1
-          ),
-          pdf.numPages
-        );
-
-
-      const firstPage =
-        await pdf.getPage(1);
-
-
-      const baseViewport =
-        firstPage.getViewport({
-          scale: 1
-        });
-
-
-      const pageRatio =
-        baseViewport.height /
-        baseViewport.width;
-
-
-      /*
-      ============================================
-      RESPONSIVE DISPLAY SIZE
-      ============================================
-
-      Desktop:
-      430px page.
-
-      Phone:
-      fit inside available screen width.
-      */
-
-
-      const isMobile =
-        window.innerWidth <= 700;
-
-
-      let pageWidth;
-
-
-      if (isMobile) {
-
-        pageWidth =
-          Math.min(
-            430,
-            window.innerWidth - 28
-          );
-
-      }
-
-      else {
-
-        pageWidth =
-          430;
-
-      }
-
-
-      const pageHeight =
-        pageWidth *
-        pageRatio;
-
-
-      /*
-      ============================================
-      RENDER PDF PAGES
-      ============================================
-      */
-
-
-      for (
-        let pageNumber = 1;
-        pageNumber <= pdf.numPages;
-        pageNumber++
-      ) {
-
-
-        const page =
-          await pdf.getPage(
-            pageNumber
-          );
-
-
-        const renderViewport =
-          page.getViewport({
-            scale: 1.6
-          });
-
-
-        const pageElement =
-          document.createElement(
-            "div"
-          );
-
-
-        pageElement.className =
-          "page";
-
-
-        if (
-          pageNumber === 1 ||
-          pageNumber === pdf.numPages
-        ) {
-
-          pageElement.dataset.density =
-            "hard";
-
+      // Auto-detect landscape magazine spreads. Explicit per-book override:
+      // "spreadMode": "single" or "spreadMode": "split" in books.json.
+      // The original PDF stays unchanged; only the flipbook presentation is split.
+      const spreadMode = book.spreadMode || "auto";
+      const pageDefinitions = [];
+      for (let pdfPageNumber = 1; pdfPageNumber <= pdf.numPages; pdfPageNumber++) {
+        const sourcePage = await pdf.getPage(pdfPageNumber);
+        const viewport = sourcePage.getViewport({ scale: 1 });
+        const split = spreadMode === "split" ||
+          (spreadMode !== "single" && viewport.width / viewport.height > 1.2);
+        if (split) {
+          pageDefinitions.push({ pdfPageNumber, half: "left", ratio: viewport.height / (viewport.width / 2) });
+          pageDefinitions.push({ pdfPageNumber, half: "right", ratio: viewport.height / (viewport.width / 2) });
+        } else {
+          pageDefinitions.push({ pdfPageNumber, half: null, ratio: viewport.height / viewport.width });
         }
-
-
-        const canvas =
-          document.createElement(
-            "canvas"
-          );
-
-
-        const context =
-          canvas.getContext(
-            "2d"
-          );
-
-
-        canvas.width =
-          Math.floor(
-            renderViewport.width
-          );
-
-
-        canvas.height =
-          Math.floor(
-            renderViewport.height
-          );
-
-
-        pageElement.appendChild(
-          canvas
-        );
-
-
-        bookContainer.appendChild(
-          pageElement
-        );
-
-
-        await page.render({
-
-          canvasContext:
-            context,
-
-          viewport:
-            renderViewport
-
-        }).promise;
-
-
+        sourcePage.cleanup();
       }
 
+      const totalPages = pageDefinitions.length;
+      // Existing ?page= links refer to original PDF pages, even when split.
+      const safeRequestedPage = Math.min(Math.max(requestedPage, 1), pdf.numPages);
+      const startIndex = Math.max(0, pageDefinitions.findIndex(p => p.pdfPageNumber === safeRequestedPage));
+      const pageRatio = pageDefinitions[0].ratio;
+      const isMobile = window.innerWidth <= 700;
+      const pageWidth = isMobile
+        ? Math.min(430, Math.max(180, window.innerWidth - 28))
+        : Math.min(430, Math.max(260, (window.innerWidth - 210) / 2));
+      const pageHeight = pageWidth * pageRatio;
 
-      /*
-      ============================================
-      CREATE FLIPBOOK
-      ============================================
-      */
-
+      status.textContent = `Preparing ${totalPages} flipbook pages...`;
+      let lastPdfPageNumber = 0;
+      let sourceCanvas = null;
+      for (let i = 0; i < pageDefinitions.length; i++) {
+        const definition = pageDefinitions[i];
+        if (definition.pdfPageNumber !== lastPdfPageNumber) {
+          const sourcePage = await pdf.getPage(definition.pdfPageNumber);
+          // Limit resolution for large PDFs to reduce memory usage.
+          const native = sourcePage.getViewport({ scale: 1 });
+          const renderScale = Math.min(1.6, 2200 / Math.max(native.width, native.height));
+          const renderViewport = sourcePage.getViewport({ scale: renderScale });
+          sourceCanvas = document.createElement("canvas");
+          sourceCanvas.width = Math.ceil(renderViewport.width);
+          sourceCanvas.height = Math.ceil(renderViewport.height);
+          await sourcePage.render({ canvasContext: sourceCanvas.getContext("2d"), viewport: renderViewport }).promise;
+          sourcePage.cleanup();
+          lastPdfPageNumber = definition.pdfPageNumber;
+        }
+        const pageElement = document.createElement("div");
+        pageElement.className = "page";
+        if (i === 0 || i === totalPages - 1) pageElement.dataset.density = "hard";
+        const canvas = document.createElement("canvas");
+        const cropWidth = definition.half ? Math.floor(sourceCanvas.width / 2) : sourceCanvas.width;
+        const cropX = definition.half === "right" ? sourceCanvas.width - cropWidth : 0;
+        canvas.width = cropWidth;
+        canvas.height = sourceCanvas.height;
+        canvas.getContext("2d").drawImage(sourceCanvas, cropX, 0, cropWidth, sourceCanvas.height, 0, 0, cropWidth, sourceCanvas.height);
+        pageElement.appendChild(canvas);
+        bookContainer.appendChild(pageElement);
+      }
+      sourceCanvas = null;
 
       const pageFlip =
         new St.PageFlip(
@@ -1375,7 +1284,7 @@
 
 
       pageFlip.turnToPage(
-        safeStartPage - 1
+        startIndex
       );
 
 
@@ -1389,13 +1298,13 @@
 
 
         pageCounter.textContent =
-          `${currentPage} / ${pdf.numPages}`;
+          `${currentPage} / ${totalPages}`;
 
 
         const progress =
           (
             currentPage /
-            pdf.numPages
+            totalPages
           ) * 100;
 
 
@@ -1406,7 +1315,7 @@
 
 
       updatePageCounter(
-        safeStartPage - 1
+        startIndex
       );
 
 
@@ -1547,7 +1456,7 @@
 
 
       status.textContent =
-        `${pdf.numPages} pages · Swipe sideways to turn pages`;
+        `${totalPages} flipbook pages · Swipe sideways to turn pages`;
 
 
     }
