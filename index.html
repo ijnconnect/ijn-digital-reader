@@ -544,9 +544,10 @@
       html:fullscreen .reading-surface { padding:3px; }
       html:fullscreen .side-arrow { display:none; }
     }
-    /* V7: full-bleed reader with independent, functional zoom */
+    /* V8: stable initial geometry and centered reader */
     .reading-surface { overflow:auto; }
-    .zoom-viewport { position:relative; flex:none; margin:auto; }
+    .zoom-viewport { position:relative; flex:none; margin:auto; min-width:0; }
+    .reading-surface { justify-content:center; align-items:center; }
     .book-stage { position:absolute; top:0; left:0; margin:0 !important; display:block; transform-origin:top left; }
     html:fullscreen, html:fullscreen body { width:100%; height:100%; overflow:hidden; }
     html:fullscreen .reader-area { position:fixed; inset:0 0 58px 0; padding:0 !important; margin:0; width:100vw; height:calc(100dvh - 58px); background:#f5f8fb; }
@@ -980,6 +981,17 @@
         allPages[0].dataset.density = "hard";
         allPages[allPages.length - 1].dataset.density = "hard";
 
+        /* V8: Establish the book geometry BEFORE PageFlip measures its parent.
+           Without this, the initial 100%-wide stage can leave the book offset
+           until a second reload or a fullscreen resize. */
+        const initialStage = document.querySelector(".book-stage");
+        const initialViewport = document.querySelector(".zoom-viewport");
+        const initialWidth = pageWidth * (isMobile ? 1 : 2);
+        initialStage.style.width = initialWidth + "px";
+        initialStage.style.height = pageHeight + "px";
+        initialViewport.style.width = initialWidth + "px";
+        initialViewport.style.height = pageHeight + "px";
+
         /* CREATE FLIPBOOK */
 
         const pageFlip = new St.PageFlip(bookContainer, {
@@ -999,7 +1011,7 @@
           disableFlipByClick: isMobile,
           swipeDistance: isMobile ? 60 : 30,
 
-          autoSize: true
+          autoSize: false
 
         });
 
@@ -1083,12 +1095,12 @@
         let userZoom = 1;
         let fitScale = 1;
         let zoomMode = "fit";
-        const baseWidth = pageWidth * 2;
+        const baseWidth = pageWidth * (isMobile ? 1 : 2);
         const baseHeight = pageHeight;
 
         function applyReaderZoom() {
           const fullscreen = !!document.fullscreenElement;
-          const availableWidth = Math.max(100, surface.clientWidth - 8);
+          const availableWidth = Math.max(100, surface.clientWidth - 24);
           const availableHeight = Math.max(100,
             fullscreen ? surface.clientHeight - 8 : window.innerHeight - 180);
           // Fit the full two-page spread inside the available viewport.
@@ -1103,6 +1115,8 @@
           stage.style.height = baseHeight + "px";
           viewportBox.style.width = Math.ceil(baseWidth * scale) + "px";
           viewportBox.style.height = Math.ceil(baseHeight * scale) + "px";
+          // Center through flex auto margins; avoid stale offsets from initial layout.
+          viewportBox.style.margin = "auto";
           zoomValue.textContent = `${Math.round(userZoom * 100)}%`;
           surface.classList.toggle("zoom-active", userZoom > 1.02);
         }
@@ -1150,7 +1164,16 @@
           event.preventDefault();
           changeZoom(event.deltaY < 0 ? 1.1 : 1 / 1.1);
         }, {passive:false});
-        requestAnimationFrame(applyReaderZoom);
+        // Layout can settle after fonts, images and PDF.js/PageFlip insertion.
+        // Refit after the browser has measured the final surface dimensions.
+        requestAnimationFrame(() => requestAnimationFrame(applyReaderZoom));
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => requestAnimationFrame(applyReaderZoom));
+        }
+        const readerResizeObserver = new ResizeObserver(() => {
+          requestAnimationFrame(applyReaderZoom);
+        });
+        readerResizeObserver.observe(surface);
 
         /* End of publication: related guides are below the reader. */
 
