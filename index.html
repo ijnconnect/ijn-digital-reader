@@ -560,6 +560,46 @@
       html:fullscreen .reader-toolbar { height:60px; min-height:60px; padding:6px; }
       html:fullscreen .stf__parent { max-width:none !important; }
     }
+    /* V9: one natural page scrollbar in normal reading mode */
+    html:not(:fullscreen) .reading-surface {
+      overflow:visible !important;
+      overscroll-behavior:auto;
+      height:auto !important;
+      min-height:0;
+    }
+    html:not(:fullscreen) .reader-area { overflow:visible; }
+    html:not(:fullscreen) .zoom-viewport { flex-shrink:0; }
+    html:fullscreen .reading-surface { overflow:auto !important; overscroll-behavior:contain; }
+
+    /* Related reading continues the same calm IJN reader experience */
+    .related-section {
+      max-width:1350px;
+      margin:0 auto 72px;
+      padding:38px clamp(20px,4vw,56px) 50px;
+      background:rgba(255,255,255,.58);
+      border:1px solid rgba(255,255,255,.9);
+      border-top:1px solid #e2ebf2;
+      border-radius:0 0 24px 24px;
+      box-shadow:0 24px 45px rgba(0,49,83,.035);
+    }
+    .related-heading { margin-bottom:24px; }
+    .related-heading h2 { font-size:clamp(20px,2.4vw,27px); }
+    .related-grid { gap:24px; }
+    .related-card {
+      display:flex; flex-direction:column; align-items:flex-start; gap:12px;
+      padding:0; background:transparent; border:0; border-radius:0;
+      box-shadow:none;
+    }
+    .related-card:hover { box-shadow:none; }
+    .related-cover { width:100px; height:138px; object-fit:cover; }
+    .related-card strong { font-size:12px; line-height:1.55; }
+    .related-card small { margin-top:5px; }
+    .related-card .read-more { margin-top:7px; }
+    @media(max-width:700px) {
+      .related-section { margin:0 12px 42px; padding:26px 16px 32px; border-radius:0 0 18px 18px; }
+      .related-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px 14px; }
+      .related-cover { width:85px; height:117px; }
+    }
     @media(prefers-reduced-motion:reduce){ .related-card { transition:none; } }
   </style>
 </head>
@@ -1122,15 +1162,18 @@
         }
 
         function changeZoom(multiplier) {
-          const oldLeft = surface.scrollLeft;
-          const oldTop = surface.scrollTop;
+          const normalMode = !document.fullscreenElement;
+          const oldLeft = normalMode ? window.scrollX : surface.scrollLeft;
+          const oldTop = normalMode ? window.scrollY : surface.scrollTop;
           const oldWidth = viewportBox.offsetWidth || 1;
           const oldHeight = viewportBox.offsetHeight || 1;
           userZoom = Math.max(0.5, Math.min(4, userZoom * multiplier));
           zoomMode = "custom";
           applyReaderZoom();
-          surface.scrollLeft = (oldLeft + surface.clientWidth / 2) * (viewportBox.offsetWidth / oldWidth) - surface.clientWidth / 2;
-          surface.scrollTop = (oldTop + surface.clientHeight / 2) * (viewportBox.offsetHeight / oldHeight) - surface.clientHeight / 2;
+          if (!normalMode) {
+            surface.scrollLeft = (oldLeft + surface.clientWidth / 2) * (viewportBox.offsetWidth / oldWidth) - surface.clientWidth / 2;
+            surface.scrollTop = (oldTop + surface.clientHeight / 2) * (viewportBox.offsetHeight / oldHeight) - surface.clientHeight / 2;
+          }
         }
 
         document.getElementById("zoom-in").addEventListener("click", () => changeZoom(1.25));
@@ -1139,7 +1182,7 @@
           userZoom = 1;
           zoomMode = "fit";
           applyReaderZoom();
-          surface.scrollTo({left:0,top:0,behavior:"instant"});
+          if (document.fullscreenElement) surface.scrollTo({left:0,top:0,behavior:"instant"});
         });
 
         fullscreenButton.addEventListener("click", async () => {
