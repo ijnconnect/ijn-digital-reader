@@ -499,6 +499,52 @@
         margin-top: 6px;
       }
     }
+
+    /* V6: distraction-free reading, zoom and related care */
+    .toolbar-side.right { gap: 8px; }
+    .zoom-controls { display:flex; align-items:center; gap:5px; }
+    .zoom-value { min-width:48px; text-align:center; font-size:11px; font-weight:600; }
+    .zoom-button { min-width:38px; padding:0 10px; }
+    .reader-area { isolation:isolate; }
+    .reading-surface { overflow:auto; overscroll-behavior:contain; }
+    .book-stage { flex:none; margin:auto; transform-origin:center center; }
+    .reading-surface.zoom-active .book-stage { touch-action:pan-x pan-y; }
+    .related-section { max-width:1260px; margin:48px auto 90px; padding:0 24px; }
+    .related-heading { display:flex; justify-content:space-between; gap:16px; align-items:end; margin-bottom:23px; }
+    .related-kicker { font-size:10px; font-weight:700; color:var(--ijn-blue); letter-spacing:1.7px; text-transform:uppercase; }
+    .related-heading h2 { font-size:clamp(21px,3vw,29px); margin:5px 0 7px; }
+    .related-heading p { font-size:12px; color:var(--muted); margin:0; line-height:1.7; }
+    .related-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+    .related-card { display:flex; align-items:center; gap:14px; padding:14px; border:1px solid #dfebf3; background:#fff; border-radius:14px; text-decoration:none; color:var(--ijn-navy); transition:transform .2s,box-shadow .2s; min-width:0; }
+    .related-card:hover { transform:translateY(-4px); box-shadow:0 12px 26px #00315312; }
+    .related-cover { width:68px; height:92px; flex-shrink:0; object-fit:cover; border-radius:3px; box-shadow:3px 5px 12px #00315322; background:linear-gradient(140deg,#003153,#2d99c9); }
+    .related-placeholder { display:flex; align-items:end; padding:8px; font-size:9px; color:white; font-weight:600; overflow-wrap:anywhere; }
+    .related-card strong { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; font-size:12px; line-height:1.55; }
+    .related-card small { display:block; margin-top:8px; font-size:10px; color:var(--muted); }
+    .related-card .read-more { display:block; margin-top:10px; font-size:10px; color:#087eae; font-weight:600; }
+    .related-empty { font-size:12px; color:var(--muted); }
+    html:fullscreen, html:-webkit-full-screen { background:#edf3f8; }
+    html:fullscreen .reader-header, html:fullscreen .book-info,
+    html:fullscreen .related-section { display:none; }
+    html:fullscreen .reader-area { position:fixed; inset:0 0 68px; width:100%; height:auto; padding:10px 56px; background:#edf3f8; z-index:200; }
+    html:fullscreen .reading-surface { width:100%; height:100%; min-height:0; padding:8px; border:0; border-radius:12px; background:#f9fbfd; box-shadow:none; }
+    html:fullscreen .reading-surface::after { display:none; }
+    html:fullscreen .reader-toolbar { position:fixed; bottom:0; left:0; right:0; z-index:250; }
+    html:fullscreen .side-arrow { z-index:240; }
+    html:fullscreen .stf__parent { max-width:none !important; }
+    @media(max-width:1000px){ .related-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+    @media(max-width:700px){
+      .zoom-controls { gap:2px; }
+      .zoom-value { min-width:37px; font-size:9px; }
+      .zoom-button { width:30px; min-width:30px; height:36px; padding:0; }
+      .reader-toolbar { gap:4px; }
+      .related-section { margin:35px auto 65px; padding:0 14px; }
+      .related-grid { grid-template-columns:1fr; gap:10px; }
+      html:fullscreen .reader-area { padding:4px; inset:0 0 64px; }
+      html:fullscreen .reading-surface { padding:3px; }
+      html:fullscreen .side-arrow { display:none; }
+    }
+    @media(prefers-reduced-motion:reduce){ .related-card { transition:none; } }
   </style>
 </head>
 
@@ -608,6 +654,12 @@
     </div>
 
     <div class="toolbar-side right">
+      <div class="zoom-controls" aria-label="Reader zoom controls">
+        <button class="toolbar-button zoom-button" id="zoom-out" aria-label="Zoom out">−</button>
+        <span class="zoom-value" id="zoom-value">100%</span>
+        <button class="toolbar-button zoom-button" id="zoom-in" aria-label="Zoom in">+</button>
+        <button class="toolbar-button zoom-button" id="fit-btn" aria-label="Fit book to screen" title="Fit to screen">⊞</button>
+      </div>
 
       <button class="toolbar-button" id="fullscreen-btn">
         ⛶ <span class="label">Fullscreen</span>
@@ -616,6 +668,15 @@
     </div>
 
   </footer>
+
+  <section class="related-section" id="related-section" hidden aria-labelledby="related-title">
+    <div class="related-heading"><div>
+      <div class="related-kicker">IJN Patient Education</div>
+      <h2 id="related-title">Continue Exploring Your Care</h2>
+      <p>Explore other IJN publications to support your understanding of treatment, recovery and heart health.</p>
+    </div></div>
+    <div class="related-grid" id="related-grid"></div>
+  </section>
 
   <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
@@ -626,6 +687,67 @@
 
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.worker.mjs";
+
+    function renderRelatedBooks(books, currentId) {
+      const current = books[currentId];
+      const section = document.getElementById("related-section");
+      const grid = document.getElementById("related-grid");
+      if (!current || !grid) return;
+      const asList = value => Array.isArray(value) ? value :
+        (typeof value === "string" ? value.split(",") : []);
+      const norm = value => String(value).trim().toLowerCase().replace(/[ _]+/g,"-");
+      const topics = new Set([...asList(current.topics), ...asList(current.keywords)].map(norm));
+      const explicit = asList(current.related_books).map(String);
+      const candidates = Object.entries(books).filter(([id,b]) =>
+        id !== currentId && b && b.pdf);
+      candidates.sort(([idA,a],[idB,b]) => {
+        function score(id,book) {
+          const otherTopics = [...asList(book.topics), ...asList(book.keywords)].map(norm);
+          const overlap = otherTopics.filter(t => topics.has(t)).length;
+          return (explicit.includes(id) ? 100 : 0) + overlap * 12 +
+            (book.category === current.category ? 2 : 0) +
+            (Number(book.year) || 0) / 10000;
+        }
+        return score(idB,b) - score(idA,a);
+      });
+      grid.replaceChildren();
+      for (const [id,b] of candidates.slice(0,4)) {
+        const a = document.createElement("a");
+        a.className = "related-card";
+        a.href = `index.html?book=${encodeURIComponent(id)}`;
+        if (b.cover) {
+          const img = document.createElement("img");
+          img.className = "related-cover";
+          img.src = b.cover;
+          img.alt = "";
+          img.loading = "lazy";
+          img.onerror = () => {
+            const placeholder = document.createElement("div");
+            placeholder.className = "related-cover related-placeholder";
+            placeholder.textContent = "IJN";
+            img.replaceWith(placeholder);
+          };
+          a.append(img);
+        } else {
+          const placeholder = document.createElement("div");
+          placeholder.className = "related-cover related-placeholder";
+          placeholder.textContent = "IJN";
+          a.append(placeholder);
+        }
+        const info = document.createElement("div");
+        const name = document.createElement("strong");
+        name.textContent = b.title || "IJN Publication";
+        const meta = document.createElement("small");
+        meta.textContent = [b.subtitle,b.year].filter(Boolean).join(" · ");
+        const read = document.createElement("span");
+        read.className = "read-more";
+        read.textContent = "Read publication ↗";
+        info.append(name,meta,read);
+        a.append(info);
+        grid.append(a);
+      }
+      section.hidden = !grid.children.length;
+    }
 
     async function loadBook() {
 
@@ -660,6 +782,7 @@
 
         const books = await response.json();
         const book = books[bookId];
+        renderRelatedBooks(books, bookId);
 
         if (!book) {
           titleElement.textContent = "Publication not found";
@@ -773,7 +896,7 @@
           const page = await pdf.getPage(pageNumber);
 
           const viewport = page.getViewport({
-            scale: 1.6
+            scale: 2.4
           });
 
           const sourceCanvas = document.createElement("canvas");
@@ -936,18 +1059,81 @@
             window.open(pdfUrl, "_blank", "noopener,noreferrer");
           });
 
-        /* FULLSCREEN */
+        /* FULLSCREEN + FIT/ZOOM */
+        const surface = document.querySelector(".reading-surface");
+        const stage = document.querySelector(".book-stage");
+        const zoomValue = document.getElementById("zoom-value");
+        const fullscreenButton = document.getElementById("fullscreen-btn");
+        let userZoom = 1;
+        let fitScale = 1;
+        let zoomMode = "fit";
 
-        document.getElementById("fullscreen-btn")
-          .addEventListener("click", async () => {
+        function applyReaderZoom() {
+          const parent = bookContainer.querySelector(".stf__parent");
+          if (!parent) return;
+          // Measure the unscaled PageFlip element, not its transformed bounds.
+          parent.style.transform = "none";
+          parent.style.transformOrigin = "top left";
+          const naturalWidth = parent.offsetWidth || pageWidth * 2;
+          const naturalHeight = parent.offsetHeight || pageHeight;
+          const fullscreen = !!document.fullscreenElement;
+          const roomWidth = Math.max(100, surface.clientWidth - (fullscreen ? 24 : 12));
+          const roomHeight = Math.max(100, surface.clientHeight - (fullscreen ? 24 : 12));
+          fitScale = fullscreen
+            ? Math.min(roomWidth / naturalWidth, roomHeight / naturalHeight)
+            : 1;
+          const scale = Math.max(0.45, Math.min(3.5, fitScale * userZoom));
+          stage.style.width = Math.ceil(naturalWidth * scale) + "px";
+          stage.style.height = Math.ceil(naturalHeight * scale) + "px";
+          stage.style.minWidth = "0";
+          parent.style.transform = `scale(${scale})`;
+          surface.classList.toggle("zoom-active", scale > fitScale + 0.02);
+          zoomValue.textContent = `${Math.round(userZoom * 100)}%`;
+        }
 
+        function changeZoom(multiplier) {
+          userZoom = Math.max(0.6, Math.min(3, userZoom * multiplier));
+          zoomMode = "custom";
+          applyReaderZoom();
+        }
+
+        document.getElementById("zoom-in").addEventListener("click", () => changeZoom(1.25));
+        document.getElementById("zoom-out").addEventListener("click", () => changeZoom(0.8));
+        document.getElementById("fit-btn").addEventListener("click", () => {
+          userZoom = 1;
+          zoomMode = "fit";
+          applyReaderZoom();
+          surface.scrollTo({left:0,top:0,behavior:"smooth"});
+        });
+
+        fullscreenButton.addEventListener("click", async () => {
+          try {
             if (!document.fullscreenElement) {
               await document.documentElement.requestFullscreen();
             } else {
               await document.exitFullscreen();
             }
+          } catch (error) { console.warn("Fullscreen unavailable", error); }
+        });
 
-          });
+        document.addEventListener("fullscreenchange", () => {
+          fullscreenButton.innerHTML = document.fullscreenElement
+            ? '⤢ <span class="label">Exit Fullscreen</span>'
+            : '⛶ <span class="label">Fullscreen</span>';
+          userZoom = 1;
+          requestAnimationFrame(() => requestAnimationFrame(applyReaderZoom));
+        });
+        window.addEventListener("resize", () => {
+          requestAnimationFrame(applyReaderZoom);
+        });
+        surface.addEventListener("wheel", event => {
+          if (!event.ctrlKey && !event.metaKey) return;
+          event.preventDefault();
+          changeZoom(event.deltaY < 0 ? 1.1 : 1 / 1.1);
+        }, {passive:false});
+        requestAnimationFrame(applyReaderZoom);
+
+        /* End of publication: related guides are below the reader. */
 
         /* KEYBOARD NAVIGATION */
 
