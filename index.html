@@ -905,108 +905,128 @@
 
         const pageMap = [];
 
-        function createBookPage(
-          sourceCanvas,
-          cropX,
-          cropWidth,
-          pdfPageNumber
-        ) {
-
+        /*
+         * PERFORMANCE V10: Build lightweight flipbook page placeholders first.
+         * Only the visible pages and a small surrounding window get PDF canvases.
+         * PageFlip still receives the full set of HTML pages, preserving page
+         * counts, landscape splitting, hard covers and existing deep links.
+         */
+        const pageDescriptors = [];
+        function createBookPage(pdfPageNumber, half) {
           const pageElement = document.createElement("div");
           pageElement.className = "page";
-
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.round(cropWidth);
-          canvas.height = sourceCanvas.height;
-
-          const context = canvas.getContext("2d");
-
-          context.drawImage(
-            sourceCanvas,
-            cropX,
-            0,
-            cropWidth,
-            sourceCanvas.height,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
-
-          pageElement.appendChild(canvas);
+          pageElement.setAttribute("aria-label", `PDF page ${pdfPageNumber}`);
+          pageElement.style.background = "#fff";
           bookContainer.appendChild(pageElement);
           pageMap.push(pdfPageNumber);
+          pageDescriptors.push({ pdfPageNumber, half, element: pageElement, canvas: null });
         }
 
-        /* RENDER PDF PAGES */
-
-        for (
-          let pageNumber = 1;
-          pageNumber <= pdf.numPages;
-          pageNumber++
-        ) {
-
-          status.textContent =
-            `Preparing PDF page ${pageNumber} of ${pdf.numPages}...`;
-
-          const page = await pdf.getPage(pageNumber);
-
-          const viewport = page.getViewport({
-            scale: 2.4
-          });
-
-          const sourceCanvas = document.createElement("canvas");
-          sourceCanvas.width = Math.floor(viewport.width);
-          sourceCanvas.height = Math.floor(viewport.height);
-
-          const sourceContext = sourceCanvas.getContext("2d");
-
-          await page.render({
-            canvasContext: sourceContext,
-            viewport
-          }).promise;
-
+        status.textContent = "Preparing publication pages...";
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+          const page = pageNumber === 1 ? firstPage : await pdf.getPage(pageNumber);
+          const viewport = page.getViewport({ scale: 1 });
           if (isSpread(viewport)) {
-
-            /*
-             * Wide PDF sheet:
-             * split into left and right portrait pages.
-             */
-
-            const leftWidth = Math.floor(sourceCanvas.width / 2);
-            const rightWidth = sourceCanvas.width - leftWidth;
-
-            createBookPage(
-              sourceCanvas,
-              0,
-              leftWidth,
-              pageNumber
-            );
-
-            createBookPage(
-              sourceCanvas,
-              leftWidth,
-              rightWidth,
-              pageNumber
-            );
-
+            createBookPage(pageNumber, "left");
+            createBookPage(pageNumber, "right");
           } else {
-
-            /*
-             * Standard portrait PDF:
-             * preserve as one flipbook page.
-             */
-
-            createBookPage(
-              sourceCanvas,
-              0,
-              sourceCanvas.width,
-              pageNumber
-            );
-
+            createBookPage(pageNumber, "full");
           }
-
+          page.cleanup();
         }
+
+        const safeRequestedPage = Math.min(Math.max(requestedPage, 1), pdf.numPages);
+        const startIndex = Math.max(0, pageMap.findIndex(number => number >= safeRequestedPage));
+        // PageFlip can show two facing pages. Include enough neighbors to
+        // support normal flips and animation without loading the entire PDF.
+        const KEEP_BEHIND = 4;
+        const KEEP_AHEAD = 6;
+        const MAX_RENDER_PIXELS = isMobile ? 2200000 : 3600000;
+        const renderPromises = new Map();
+        let desiredIndices = new Set();
+        let renderGeneration = 0;
+
+        function pageWindow(index) {
+          const result = new Set();
+          for (let i = Math.max(0, index - KEEP_BEHIND);
+               i <= Math.min(pageDescriptors.length - 1, index + KEEP_AHEAD); i++) {
+            result.add(i);
+          }
+          return result;
+        }
+
+        async function renderPdfSheet(pdfPageNumber, indices, generation) {
+          const page = await pdf.getPage(pdfPageNumber);
+          const natural = page.getViewport({ scale: 1 });
+          // Limit canvas pixel count, especially on memory-constrained phones.
+          const targetScale = Math.min(2, Math.sqrt(MAX_RENDER_PIXELS / (natural.width * natural.height)));
+          const viewport = page.getViewport({ scale: Math.max(0.5, targetScale) });
+          const sourceCanvas = document.createElement("canvas");
+          sourceCanvas.width = Math.max(1, Math.floor(viewport.width));
+          sourceCanvas.height = Math.max(1, Math.floor(viewport.height));
+          try {
+            await page.render({ canvasContext: sourceCanvas.getContext("2d"), viewport }).promise;
+            if (generation !== renderGeneration) return;
+            for (const index of indices) {
+              if (!desiredIndices.has(index)) continue;
+              const desc = pageDescriptors[index];
+              if (!desc || desc.canvas) continue;
+              const halfWidth = Math.floor(sourceCanvas.width / 2);
+              const cropX = desc.half === "right" ? halfWidth : 0;
+              const cropWidth = desc.half === "left" ? halfWidth
+                : desc.half === "right" ? sourceCanvas.width - halfWidth : sourceCanvas.width;
+              const canvas = document.createElement("canvas");
+              canvas.width = cropWidth;
+              canvas.height = sourceCanvas.height;
+              canvas.getContext("2d").drawImage(sourceCanvas, cropX, 0, cropWidth,
+                sourceCanvas.height, 0, 0, cropWidth, sourceCanvas.height);
+              desc.element.appendChild(canvas);
+              desc.canvas = canvas;
+            }
+          } finally {
+            sourceCanvas.width = 0;
+            sourceCanvas.height = 0;
+            page.cleanup();
+          }
+        }
+
+        async function updateRenderedWindow(index, awaitVisible = false) {
+          desiredIndices = pageWindow(index);
+          const generation = ++renderGeneration;
+          for (let i = 0; i < pageDescriptors.length; i++) {
+            const desc = pageDescriptors[i];
+            if (!desiredIndices.has(i) && desc.canvas) {
+              desc.canvas.remove();
+              desc.canvas.width = 0;
+              desc.canvas.height = 0;
+              desc.canvas = null;
+            }
+          }
+          const byPdfPage = new Map();
+          for (const i of desiredIndices) {
+            if (pageDescriptors[i].canvas) continue;
+            const n = pageDescriptors[i].pdfPageNumber;
+            if (!byPdfPage.has(n)) byPdfPage.set(n, []);
+            byPdfPage.get(n).push(i);
+          }
+          const sheets = [...byPdfPage.entries()].sort((a, b) => {
+            const distance = ([, ids]) => Math.min(...ids.map(i => Math.abs(i - index)));
+            return distance(a) - distance(b);
+          });
+          // Sequential rendering prevents multiple large temporary PDF canvases
+          // being allocated simultaneously.
+          const work = (async () => {
+            for (const [n, ids] of sheets) {
+              if (generation !== renderGeneration) break;
+              try { await renderPdfSheet(n, ids, generation); }
+              catch (err) { console.warn(`Unable to render PDF page ${n}`, err); }
+            }
+          })();
+          if (awaitVisible) await work;
+        }
+
+        status.textContent = "Rendering opening pages...";
+        await updateRenderedWindow(startIndex, true);
 
         /* SET COVER DENSITY */
 
@@ -1057,20 +1077,7 @@
 
         pageFlip.loadFromHTML(allPages);
 
-        /* INITIAL PAGE */
-
-        const safeRequestedPage = Math.min(
-          Math.max(requestedPage, 1),
-          pdf.numPages
-        );
-
-        const startIndex = Math.max(
-          0,
-          pageMap.findIndex(
-            number => number >= safeRequestedPage
-          )
-        );
-
+        /* INITIAL PAGE — original PDF page links remain supported */
         pageFlip.turnToPage(startIndex);
 
         /* PAGE COUNTER */
@@ -1095,6 +1102,7 @@
 
         pageFlip.on("flip", event => {
           updatePageCounter(event.data);
+          updateRenderedWindow(event.data);
         });
 
         /* NAVIGATION */
