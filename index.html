@@ -6,11 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>IJN Digital Reader</title>
+  <meta name="description" content="Read Institut Jantung Negara (IJN) patient education guides, heart health resources and digital publications.">
   <link rel="icon" type="image/png" href="ijn-logo.png">
   <link rel="apple-touch-icon" href="ijn-logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -571,6 +573,37 @@
     html:not(:fullscreen) .zoom-viewport { flex-shrink:0; }
     html:fullscreen .reading-surface { overflow:auto !important; overscroll-behavior:contain; }
 
+    /* V11: reserve the reader's footprint before PDF.js downloads the PDF.
+       Prevent the loading skeleton from collapsing and pushing content down. */
+    #status { min-height: 18px; line-height: 18px; }
+    .book-info { min-height: 126px; }
+    .reading-surface { min-height: 760px; }
+    .zoom-viewport { min-width: 0; }
+    .reading-surface.is-loading .zoom-viewport {
+      width: min(460px, 80%) !important;
+      height: min(610px, 70vh) !important;
+      border-radius: 4px;
+      background: linear-gradient(110deg,#e8eff4 12%,#f7fafc 35%,#e8eff4 58%);
+      background-size: 240% 100%;
+      animation: ijn-reader-skeleton 1.7s ease-in-out infinite;
+      box-shadow: 8px 12px 25px rgba(0,49,83,.07);
+    }
+    @keyframes ijn-reader-skeleton { to { background-position-x: -240%; } }
+    @media (max-width: 700px) {
+      .book-info { min-height: 112px; }
+      .reading-surface {
+        min-height: calc((100vw - 28px) * 1.45 + 38px);
+      }
+      .reading-surface.is-loading .zoom-viewport {
+        width: min(360px, calc(100vw - 48px)) !important;
+        height: calc((100vw - 48px) * 1.40) !important;
+        max-height: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reading-surface.is-loading .zoom-viewport { animation: none; }
+    }
+
     /* Related reading continues the same calm IJN reader experience */
     .related-section {
       max-width:1350px;
@@ -611,7 +644,7 @@
     <a class="brand" href="library.html" aria-label="Back to Digital Library homepage">
 
       <div class="brand-logo">
-        <img src="ijn-logo.png" alt="Institut Jantung Negara Logo">
+        <img src="ijn-logo.png" alt="Institut Jantung Negara Logo" width="56" height="56">
       </div>
 
       <div class="brand-text">
@@ -659,7 +692,7 @@
       aria-label="Previous page"
     >‹</button>
 
-    <div class="reading-surface">
+    <div class="reading-surface is-loading">
       <div class="zoom-viewport"><div class="book-stage">
         <div id="book"></div>
       </div></div>
@@ -734,7 +767,7 @@
     <div class="related-grid" id="related-grid"></div>
   </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
   <script type="module">
 
@@ -1076,6 +1109,7 @@
         });
 
         pageFlip.loadFromHTML(allPages);
+        document.querySelector(".reading-surface").classList.remove("is-loading");
 
         /* INITIAL PAGE — original PDF page links remain supported */
         pageFlip.turnToPage(startIndex);
@@ -1256,6 +1290,7 @@
 
         console.error("IJN Digital Reader Error:", error);
 
+        document.querySelector(".reading-surface").classList.remove("is-loading");
         status.innerHTML =
           '<span class="error">Unable to create flipbook.</span>';
 
