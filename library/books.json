@@ -84,7 +84,9 @@
         "year": 2026,
         "pdf": "https://www.ijn.com.my/wp-content/uploads/2026/10/17971_IJN_PREOP-Booklet_hires24pp.pdf",
         "cover": "https://www.ijn.com.my/wp-content/uploads/2026/10/ijn-cover-17971-ijn-preop-booklet-hires24pp-1792730822.jpg",
-        "topics": [],
+        "topics": [
+            "physiotherapy"
+        ],
         "keywords": [],
         "related_books": [],
         "featured": false,
