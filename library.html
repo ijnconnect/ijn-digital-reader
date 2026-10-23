@@ -65,6 +65,31 @@
 @media(max-width:370px){.hero-actions{grid-template-columns:1fr}.hero-art{min-height:165px}.categories{grid-template-columns:1fr}.category-card{min-height:64px}.metric span{font-size:9px}}
 @media(min-width:601px) and (max-width:850px){.hero{grid-template-columns:minmax(0,1fr) 180px}.hero-copy{padding:30px}.featured-cover{width:130px;height:190px}}
 
+
+/* V4: Reserve space for catalogue content before asynchronous JSON and covers arrive. */
+.hero-art,.cover-image-wrap{min-width:0}
+.hero-art .cover-image-wrap{display:flex;align-items:center;justify-content:center;width:165px;height:235px}
+.book-cover-button>.cover-image-wrap{display:block;width:100%;aspect-ratio:3/4;background:#fff;border-radius:7px}
+.book-cover-button>.cover-image-wrap>.cover-placeholder{width:100%;height:100%;border-radius:7px}
+.hero-art .cover-image-wrap>.cover-placeholder{width:165px;height:235px;border-radius:4px}
+#featured-title{min-height:2.4em}
+#featured-description{min-height:3.6em}
+/* Skeletons reserve the initial category and book-card footprint. */
+#category-cards:empty{min-height:82px}
+#recent-grid:empty{min-height:260px}
+#collection-grid:empty{min-height:270px}
+@media(max-width:600px){
+ .hero{min-height:405px}
+ .hero-art .cover-image-wrap{width:112px;height:154px}
+ .hero-art .cover-image-wrap>.cover-placeholder{width:112px;height:154px}
+ #featured-title{min-height:2.56em}
+ #featured-description{min-height:3.3em}
+ #category-cards:empty{min-height:78px}
+ #recent-grid:empty{min-height:260px}
+ #collection-grid:empty{min-height:280px}
+}
+@media(min-width:601px) and (max-width:850px){.hero-art .cover-image-wrap{width:130px;height:190px}}
+
 </style>
 </head>
 <body>
@@ -102,7 +127,7 @@ const isGuide=b=>/patient|education|physiotherapy|guide/i.test([b.category,b.tit
 const readUrl=b=>`index.html?book=${encodeURIComponent(b.id)}`;
 const resolveUrl=p=>{try{return new URL(p,location.href).href}catch{return ''}};
 const fallback=b=>`<div class="cover-placeholder"><span class="cover-mini">IJN PUBLICATION</span><span class="cover-name">${esc(b.title)}</span><span class="cover-mini">INSTITUT JANTUNG NEGARA</span></div>`;
-const art=(b,cls='book-cover')=>b.cover?`<span class="cover-image-wrap"><img class="${cls}" src="${esc(resolveUrl(b.cover))}" alt="Cover of ${esc(b.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="cover-placeholder" style="display:none"><span class="cover-mini">IJN PUBLICATION</span><span class="cover-name">${esc(b.title)}</span><span class="cover-mini">INSTITUT JANTUNG NEGARA</span></span></span>`:fallback(b);
+const art=(b,cls='book-cover')=>b.cover?`<span class="cover-image-wrap"><img class="${cls}" src="${esc(resolveUrl(b.cover))}" alt="Cover of ${esc(b.title)}" loading="${cls==='featured-cover'?'eager':'lazy'}" ${cls==='featured-cover'?'fetchpriority="high"':''} width="${cls==='featured-cover'?165:300}" height="${cls==='featured-cover'?235:400}" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="cover-placeholder" style="display:none"><span class="cover-mini">IJN PUBLICATION</span><span class="cover-name">${esc(b.title)}</span><span class="cover-mini">INSTITUT JANTUNG NEGARA</span></span></span>`:fallback(b);
 function tile(b){return `<article class="book-tile"><button class="book-cover-button" data-open="${esc(b.id)}" aria-label="View ${esc(b.title)} details">${art(b)}</button><span class="book-category">${esc(categoryName(b.category))}</span><a class="book-title" href="${esc(readUrl(b))}" title="${esc(b.title)}">${esc(b.title)}</a><div class="book-year">${esc(b.subtitle||b.year||'IJN Publication')}</div></article>`}
 function ordered(arr){return [...arr].sort((a,b)=>(Number(b.year)||0)-(Number(a.year)||0)||b.index-a.index)}
 function scrollToId(id){$(id)?.scrollIntoView({behavior:'smooth',block:'start'});$('sidebar').classList.remove('open')}
@@ -117,7 +142,7 @@ function openBook(id){const b=books.find(x=>x.id===id);if(!b)return;lastFocus=do
 function closeBook(){$('book-modal').classList.remove('open');document.body.style.overflow='';lastFocus?.focus?.()}
 function init(data){const entries=Array.isArray(data)?data.map((b,i)=>({...b,id:String(b.id||b.slug||i),index:i})):Object.entries(data).map(([id,b],i)=>({...b,id,index:i}));books=entries.filter(b=>b&&b.title&&b.pdf);if(!books.length)throw Error('No publications found in books.json');$('count-total').textContent=books.length;$('count-guides').textContent=books.filter(isGuide).length;$('count-categories').textContent=new Set(books.map(b=>b.category)).size;featured=ordered(books.filter(b=>b.featured))[0]||ordered(books)[0];$('featured-title').textContent=featured.title;$('featured-description').textContent=featured.description||featured.excerpt||`Discover ${featured.title}, part of IJN's growing digital publication collection.`;$('featured-art').innerHTML=art(featured,'featured-cover');$('recent-grid').innerHTML=ordered(books).slice(0,5).map(tile).join('');renderCategories();renderFilters();renderCollection()}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-target],[data-filter],[data-category],[data-open],[data-topic]');if(!t)return;if(t.dataset.target)scrollToId(t.dataset.target);if(t.dataset.filter)setCategory(t.dataset.filter);if(t.dataset.topic){activeTopic=t.dataset.topic;renderFilters();renderCollection();scrollToId('all-books')}if(t.dataset.category){const wanted=t.dataset.category;const match=[...new Set(books.map(b=>b.category))].find(c=>c===wanted||(wanted==='patient-guide'&&/patient|guide|education/i.test(c)));setCategory(match||'all')}if(t.dataset.open)openBook(t.dataset.open)});
-$('featured-open').addEventListener('click',()=>featured&&openBook(featured.id));$('menu-toggle').addEventListener('click',()=>$('sidebar').classList.toggle('open'));$('search-input').addEventListener('input',e=>{query=e.target.value;renderCollection();if(query.trim())scrollToId('all-books')});$('modal-close').addEventListener('click',closeBook);$('book-modal').addEventListener('click',e=>{if(e.target===$('book-modal'))closeBook()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBook()});$('year-now').textContent=new Date().getFullYear();
+$('featured-open').addEventListener('click',()=>featured&&openBook(featured.id));$('menu-toggle').addEventListener('click',()=>$('sidebar').classList.toggle('open'));let searchTimer;$('search-input').addEventListener('input',e=>{query=e.target.value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>{renderCollection();if(query.trim())scrollToId('all-books')},160)});$('modal-close').addEventListener('click',closeBook);$('book-modal').addEventListener('click',e=>{if(e.target===$('book-modal'))closeBook()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeBook()});$('year-now').textContent=new Date().getFullYear();
 fetch('library/books.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Unable to load publication catalogue');return r.json()}).then(init).catch(err=>{console.error(err);$('collection-grid').innerHTML='<div class="empty">Unable to load publications. Please check library/books.json and try refreshing.</div>';$('recent-grid').innerHTML='';$('featured-title').textContent='Explore the IJN Digital Library';$('featured-description').textContent='Our publication catalogue is temporarily unavailable.'});
 })();
 </script>
