@@ -74,5 +74,24 @@
         "last_reviewed": "",
         "next_review": "",
         "approval_status": "not-recorded"
+    },
+    "17971-ijn-preop-booklet-hires24pp": {
+        "title": "17971 IJN PREOP Booklet hires24pp",
+        "subtitle": "",
+        "category": "patient-guide",
+        "year": 2026,
+        "pdf": "https://www.ijn.com.my/wp-content/uploads/2026/10/17971_IJN_PREOP-Booklet_hires24pp.pdf",
+        "cover": "https://www.ijn.com.my/wp-content/uploads/2026/10/ijn-cover-17971-ijn-preop-booklet-hires24pp-1792730822.jpg",
+        "topics": [],
+        "keywords": [],
+        "related_books": [],
+        "featured": false,
+        "description": "",
+        "clinical_owner": "Physiotherapy",
+        "document_version": "",
+        "document_language": "en",
+        "last_reviewed": "",
+        "next_review": "",
+        "approval_status": "not-recorded"
     }
 }
