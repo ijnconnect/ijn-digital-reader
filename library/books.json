@@ -18,7 +18,20 @@
         "category": "patient-guide",
         "year": 2026,
         "pdf": "https://www.ijn.com.my/wp-content/uploads/2026/10/17971_Angiogram-Education_final-24pp.pdf",
-        "cover": "https://www.ijn.com.my/wp-content/uploads/2026/10/ijn-cover-going-home-after-an-angiogram-angiography-1792588700.jpg"
+        "cover": "https://www.ijn.com.my/wp-content/uploads/2026/10/ijn-cover-going-home-after-an-angiogram-angiography-1792588700.jpg",
+        "topics": [
+            "physiotherapy"
+        ],
+        "keywords": [],
+        "related_books": [],
+        "featured": false,
+        "description": "",
+        "clinical_owner": "",
+        "document_version": "",
+        "document_language": "",
+        "last_reviewed": "",
+        "next_review": "",
+        "approval_status": "not-recorded"
     },
     "exercise-program-after-cardiac-surgery": {
         "title": "Exercise Program After Cardiac Surgery",
