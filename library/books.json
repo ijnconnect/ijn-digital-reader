@@ -34,5 +34,26 @@
         "related_books": [],
         "featured": false,
         "description": ""
+    },
+    "physiotherapy-education-in-heart-failure": {
+        "title": "Physiotherapy Education in Heart Failure",
+        "subtitle": "",
+        "category": "patient-guide",
+        "year": 2026,
+        "pdf": "https://www.ijn.com.my/wp-content/uploads/2026/10/17971_IJN_Heart-Failure_2021_24pp.pdf",
+        "cover": "https://www.ijn.com.my/wp-content/uploads/2026/10/ijn-cover-physiotherapy-education-in-heart-failure-1792728831.jpg",
+        "topics": [
+            "physiotherapy"
+        ],
+        "keywords": [],
+        "related_books": [],
+        "featured": false,
+        "description": "",
+        "clinical_owner": "Physiotherapy Department",
+        "document_version": "2026",
+        "document_language": "en",
+        "last_reviewed": "",
+        "next_review": "",
+        "approval_status": "approved"
     }
 }
