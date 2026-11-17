@@ -110,5 +110,30 @@
         "last_reviewed": "",
         "next_review": "",
         "approval_status": "not-recorded"
+    },
+    "your-guide-to-managing-your-heart-failure": {
+        "title": "Your Guide to Managing Your Heart Failure",
+        "subtitle": "",
+        "category": "patient-guide",
+        "year": 2026,
+        "pdf": "https://www.ijn.com.my/wp-content/uploads/2026/11/Your-Guide-to-Managing-Your-Heart-Failure.pdf",
+        "cover": "https://www.ijn.com.my/wp-content/uploads/2026/11/ijn-cover-your-guide-to-managing-your-heart-failure-1794908577.jpg",
+        "topics": [
+            "medication"
+        ],
+        "keywords": [
+            "pharmacy",
+            "heart failure",
+            "hfoc"
+        ],
+        "related_books": [],
+        "featured": false,
+        "description": "",
+        "clinical_owner": "",
+        "document_version": "",
+        "document_language": "",
+        "last_reviewed": "",
+        "next_review": "",
+        "approval_status": "not-recorded"
     }
 }
