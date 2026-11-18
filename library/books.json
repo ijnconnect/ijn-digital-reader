@@ -135,5 +135,26 @@
         "last_reviewed": "",
         "next_review": "",
         "approval_status": "not-recorded"
+    },
+    "warfarin-anticoagulant": {
+        "title": "Warfarin Anticoagulant",
+        "subtitle": "",
+        "category": "handbook",
+        "year": 2026,
+        "pdf": "https://www.ijn.com.my/wp-content/uploads/2026/11/Warfarin-Management-Services-Booklet.pdf",
+        "cover": "https://www.ijn.com.my/wp-content/uploads/2026/11/ijn-cover-warfarin-anticoagulant-1795001375.jpg",
+        "topics": [
+            "medication"
+        ],
+        "keywords": [],
+        "related_books": [],
+        "featured": false,
+        "description": "",
+        "clinical_owner": "",
+        "document_version": "",
+        "document_language": "",
+        "last_reviewed": "",
+        "next_review": "",
+        "approval_status": "not-recorded"
     }
 }
